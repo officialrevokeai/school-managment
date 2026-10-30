@@ -1,0 +1,658 @@
+SCHOOL MANAGEMENT SYSTEM v2.0
+FULL-SYSTEM IMPLEMENTATION MASTER PROMPT + PHASED BUILD INSTRUCTIONS
+Prepared: 29 October 2026
+Product tagline: Smart • Secure • Connected
+
+HOW TO USE THIS DOCUMENT
+1. Attach the latest School_Management_System_v2_Source.zip and the school workflow image to your coding AI.
+2. Paste this entire document, or attach it as the implementation specification.
+3. Ask the AI to start at Phase 0 and work through the phases in order.
+4. If your coding tool has short context limits, give it the MASTER CONTRACT first, then one phase at a time. Reuse the continuation prompt at the end.
+5. Keep all progress and decisions in the repository. A new chat must be able to resume from those files.
+6. This is a prompt for implementation. Do not respond with another UI mockup, a roadmap alone, or an assertion that the existing demo is already production-ready.
+
+============================================================
+MASTER CONTRACT — READ BEFORE WRITING CODE
+============================================================
+
+Act as a senior full-stack engineer, backend architect, security-minded application engineer, QA engineer, and deployment engineer.
+
+Turn my existing School Management System v2.0 frontend into a genuinely working, deployable school management application. Preserve the latest simplified UI, soft neumorphism, and restrained lavender-blue, mint, and peach accents. Use the attached workflow as the functional source of truth and this document as the implementation and verification contract.
+
+The existing project is a FRONTEND PROTOTYPE:
+- HTML, CSS, and JavaScript;
+- fictional demo accounts;
+- localStorage records;
+- simulated approval, payment, and messaging operations;
+- existing UI and workflow smoke checks.
+These are useful design references, not evidence of authenticated backend functionality.
+
+The current source may contain dist/index.html, styles.css, refresh.css, app.js, data.js, screens.js, system.js, actions.js, workflows.js, events.js, focus.js, docs.js, qa/smoke.cjs, and README.md. Inspect the actual files before choosing a migration approach. Do not assume every function or filename is unchanged.
+
+WHATSAPP IS A PRIORITY:
+The previous UI placed messaging under “Messages” and used disconnected/local demo states. Fix both discoverability and functionality. Add a clear “WhatsApp” entry with an appropriate icon and readable text, a Home quick action where permitted, and a mobile/tablet destination. Do not hide the entire WhatsApp capability behind an ambiguous label or owner-only settings page.
+
+“Working WhatsApp” means real official provider integration, server-side sending, durable jobs, verified webhooks, real message IDs, accurate delivery state, and an authorized real-recipient test. A green toast, local database status, wa.me link, or mocked response is not proof of delivery.
+
+QUALITY RULES
+- Implement real working code, database migrations, API routes, jobs, configuration, tests, and deployment instructions.
+- Preserve working UI and source history. Do not replace the application with a new unrelated template.
+- Use one coherent stack. Avoid unnecessary microservices or rewrites.
+- Use supported stable dependency versions, pin them, and verify current official integration documentation before implementing external APIs.
+- Do not invent credentials, API fields, account approval, successful charges, successful sends, or passing test results.
+- Do not promise a bug-free system. Find defects, fix them, and report actual evidence and remaining risks.
+- Frontend visibility is not authorization. Enforce access on the server for every record, mutation, aggregate, export, file, and background job.
+- localStorage can retain harmless UI preferences; it must not be the authoritative store for school records or permissions.
+- Separate development fixtures, provider sandbox operations, staging, and production. Demo data must never silently appear as real school data.
+- Keep the demo role switcher in an explicitly marked development/demo mode only. It must not grant production permissions.
+- No placeholder buttons, fake loaders that imply success, TODO business logic, or hardcoded dashboard statistics in completed phases.
+- Continue independent work when an external account dependency is unavailable, but mark the integration BLOCKED. Do not declare the complete system ready until its live verification gates pass.
+- Do not contact real parents, staff, or students during testing. Use only recipients and test payments explicitly authorized by the owner.
+- Do not charge a real payment or start a paid external service without the owner's explicit authorization.
+- Ask for genuinely missing external configuration when needed; do not repeatedly ask about routine implementation choices.
+
+RECOMMENDED DEFAULT ARCHITECTURE
+Preserve the current frontend and introduce a typed API client progressively. A reasonable default:
+- Frontend: existing responsive HTML/CSS/JS, incrementally typed where useful.
+- Backend: Node.js + TypeScript + one maintained HTTP framework.
+- Database: PostgreSQL with migrations, constraints, transactions, and an ORM/query layer.
+- Jobs: Redis-backed durable queue and worker, or a documented durable database-backed job queue. Choose ONE implementation.
+- Files: private S3-compatible object storage or an equivalently private durable store.
+- Messaging: official Meta WhatsApp Business Platform/Cloud API through a server-side provider adapter.
+- Payments: one legitimate India-capable gateway with sandbox and production isolation.
+- Deployment: reproducible containers/configuration for frontend/API, worker, database, job infrastructure, and HTTPS reverse proxy.
+
+If the existing repository has a suitable established backend, extend it rather than replacing it. Explain any major stack change in an architecture decision record. Check current official API/SDK documentation; do not copy an obsolete tutorial's Graph API version, account structure, or webhook payload verbatim.
+
+The target is a responsive WEB APPLICATION for this project. Maintain a clean API boundary for a possible future Android/Flutter client. Do not add a native rewrite to this scope.
+
+REPOSITORY DELIVERABLES
+Maintain:
+- IMPLEMENTATION_PLAN.md
+- FEATURE_COVERAGE.csv
+- PERMISSIONS.md
+- ARCHITECTURE.md
+- DECISIONS.md
+- API_CONTRACT.md or an OpenAPI specification
+- TEST_EVIDENCE.md
+- WHATSAPP_SETUP.md
+- PAYMENT_SETUP.md
+- DEPLOYMENT.md
+- BACKUP_RESTORE.md
+- BLOCKERS.md
+- CHANGELOG.md
+- .env.example containing variable names and safe placeholders only
+
+For every workflow-image feature, FEATURE_COVERAGE.csv must identify:
+feature, role, scope, UI route, action, API/service, data entities, phase, tests, status, blocker.
+Use honest statuses: NOT STARTED, IN PROGRESS, IMPLEMENTED, TESTED, BLOCKED EXTERNAL, LIVE VERIFIED.
+A mocked integration may be TESTED WITH MOCKS but cannot be LIVE VERIFIED.
+
+============================================================
+PRODUCT AND PERMISSION REQUIREMENTS
+============================================================
+
+MULTI-SCHOOL / MULTI-BRANCH MODEL
+One owner may manage multiple schools and branches inside an organization/network. Model organization, school, branch, academic year, and term explicitly.
+
+“Owner has full access” means full authorized organization access, not unrestricted access to other organizations hosted by the same service.
+
+Authorization is the intersection of:
+authenticated identity + organization + role permissions + assigned branch/class/subject/child + record ownership/state.
+Validate all joins and foreign-key references against the same organization.
+Never trust branchId, studentId, senderId, amounts, role names, or permission flags submitted by a browser.
+
+OWNER / SUPER ADMIN
+- Global dashboard and scoped analytics.
+- Create, view, edit, activate/deactivate schools and branches.
+- Manage principals, teachers, students, parents, and office/accountant users.
+- Invite users, assign/remove principals, assign branches and classes, revoke access.
+- Create/edit roles and permissions for view/create/edit/approve/export/archive/delete where appropriate.
+- Confirm and audit explicit overrides. Do not permit overrides to escape organization boundaries or remove essential audit recording.
+- All authorized financial records, adjustments, exports, reports, and reconciliation.
+- Branding, academic years/terms, global preferences, module configuration.
+- Security/privacy preferences, notifications, backups/recovery, audit trail.
+- WhatsApp senders, default sender, category routing, templates, and messaging permissions.
+- Open role modules in a clearly labelled administrative or preview context.
+- Always show the active school/branch.
+
+PRINCIPAL
+Only assigned school/branch records:
+- School overview and performance.
+- Review admissions and transfers; approve, reject, or request changes.
+- Attendance, discipline/wellbeing, and leave monitoring.
+- Teacher performance reviews and lesson-plan reviews.
+- Timetable, exam, marks/result approvals.
+- Parent complaints, meetings, and school announcements.
+- Daily/weekly owner reports and permitted academic/operational reports.
+- No global settings, owner-setting changes, unrelated branches, or unauthorized financial administration.
+
+Every approval shows submitted details, supporting documents, current status, required decision comments, decision history, actor, and timestamp. Prevent self-approval where policy prohibits it. Edits to an already reviewed submission must follow an explicit revision/resubmission policy.
+
+TEACHER
+Only assigned classes, subjects, and students:
+- Timetable, class rosters, and permitted student profiles.
+- Present/absent/late/excused attendance; bulk mark, draft, submit, corrections with reasons.
+- Homework/classwork: create, edit, assign, attach files, set deadlines, schedule, publish.
+- Student submission review and feedback.
+- Marks: numeric validation, maximum scores, drafts, submission for principal approval.
+- Student progress.
+- Study materials, notes, and lesson plans.
+- Leave requests and decision comments.
+- Class announcements and parent messaging through permitted in-app/WhatsApp channels.
+- No financial editing, global settings, unrelated students, or school-wide announcement editing without a separate explicit grant.
+
+PARENT / STUDENT PORTAL
+Distinct permissions:
+- Parents switch only among verified linked children.
+- Students see only their own records.
+- Attendance and leave status; permitted leave requests.
+- Homework, attachments, deadlines, submissions, and feedback.
+- Approved exam schedules, approved/published results, downloadable report cards.
+- Fee balance, fee items, payment history, confirmed receipts.
+- Parent-authorized online payment; student payment initiation only if the school explicitly enables it, otherwise read-only.
+- Weekly timetable, holidays/events, notices/announcements.
+- Teacher messaging only when school policy enables it.
+- Profile/documents, certificates, reports, WhatsApp preferences/consent.
+- Draft academic records and unrelated children must never leak through search, exports, APIs, notifications, charts, or file URLs.
+
+OFFICE / ACCOUNTANT
+Assigned scope only:
+- Student admission records/forms and submission for principal review.
+- Fee structures, invoices, schedules, dues, collections, discounts, scholarships, fines.
+- Expenses, vendor records, invoices, payroll records.
+- Receipts, certificates, authorized reports, financial reconciliation.
+- Search/filter, authorized edits, downloads/printing, transaction history.
+- Fee reminder messaging under explicit permissions.
+- No academic changes, role/permission management, or unrelated branches.
+
+SHARED
+Role-based access, notifications, mobile/tablet layouts, multi-branch support, audit history, private files, backups/recovery, sorting/filtering/pagination, date/year filters, validation, confirmation, recoverable archiving where appropriate, unsaved-change protection, understandable empty/error states.
+
+Use Indian sample names, INR, DD MMM YYYY, and configurable school settings. Store timestamps consistently in UTC and interpret school schedules using its configured timezone, initially Asia/Kolkata. Do not hardcode “today” or timezone offsets in production.
+
+============================================================
+PHASE 0 — REPOSITORY AUDIT AND IMPLEMENTATION MAP
+============================================================
+
+Tasks:
+1. Read the source ZIP/repository and workflow image completely.
+2. Identify the latest UI and reusable components. Preserve the simplified default home, grouped tools, subtle gradients, and phone/tablet behavior.
+3. Inventory every visible button, form, route, role, and demo state.
+4. Locate and document all demo-only implementations: localStorage, fixed roles, hardcoded data, simulated payments, scheduled demo messages, and forced disconnected responses.
+5. Produce the feature coverage matrix, role matrix, architecture, schema outline, API map, and phase checklist.
+6. Specify an explicit WhatsApp navigation repair, not just a backend task.
+7. Document exact external prerequisites and potential costs without inventing account eligibility or prices.
+8. Define the owner organization and provisioning approach. Never hardcode a reusable production admin password.
+9. Check official WhatsApp policy, onboarding, supported account model, API versions, sender registration, templates, webhooks, and current availability of optional capabilities.
+
+Exit gate:
+Every workflow-image item is mapped. The migration plan preserves the UI. BLOCKERS.md distinguishes real account dependencies from coding work. Do not call planning alone “the completed system.”
+
+============================================================
+PHASE 1 — BACKEND, DATABASE, AUTHENTICATION, AND ACCESS CONTROL
+============================================================
+
+Tasks:
+- Create the API, migrations, durable storage, job infrastructure, and reproducible local setup.
+- Implement login/logout, secure session handling, password recovery through a real configured email service, and session expiry/revocation.
+- Use appropriate password hashing; secure, HttpOnly cookies; CSRF protection for cookie-authenticated mutations; validation; request limits; and safe error handling.
+- Provision the first owner through a documented secure one-time flow.
+- Implement organization, school, branch, user, role, permission, branch assignment, class assignment, guardian-child link, academic year/term, file metadata, notifications, and audit entities.
+- Enforce authorization in a shared server policy/service layer and at all data access boundaries.
+- Deactivating a user must revoke active sessions/access, including workers and subsequent API calls.
+- Add private file access with scoped authorization and expiring access where appropriate.
+- Implement one API error shape and one frontend API client.
+- Separate fixtures from production; production must not seed fictional records by default.
+- Record important mutations with actor, organization/branch, record, operation, changed fields, timestamp, and reason where required.
+
+Minimum test matrix:
+- Owner A cannot access Owner B's organization.
+- Principal cannot switch into an unassigned branch by editing a URL/request.
+- Teacher cannot access unassigned students or edit finance.
+- Parent cannot read an unlinked child, including through a file/export endpoint.
+- Student cannot impersonate another account.
+- Office cannot change academic records or permissions.
+- A disabled account's existing session stops working.
+- Normal login never presents a production role switcher.
+
+Exit gate:
+Actual authenticated multi-session usage works against the database. Refreshing or opening another authorized device shows persisted server data. Authorization tests include direct API requests, not merely hidden-button assertions.
+
+============================================================
+PHASE 2 — VISIBLE WHATSAPP MODULE AND REAL CONNECTION PROOF
+============================================================
+
+This is an early vertical slice. Implement it before spending further phases polishing simulated communication.
+
+UI repair:
+- Clearly labelled “WhatsApp” navigation for authorized owner, principal, teacher, and office users.
+- Appropriate Home quick action.
+- Discoverable mobile/tablet route without overcrowding bottom navigation.
+- Parent preferences/inbox only where enabled; no parent bulk-send or sender management.
+- Tabs/routes: Overview, Compose, Templates, Scheduled, History, Inbox, and Sender settings, filtered by permission.
+- Explain connection states: setup required, not verified, ready, disconnected/token expired, provider unavailable, restricted/disabled.
+- “Ready” means configuration checks passed; it does not mean every message was delivered.
+- No inaccessible hover-only actions on mobile.
+
+Integration:
+1. Use the official WhatsApp Business Platform/Cloud API, directly or through a legitimate supported provider adapter.
+2. Do not substitute unofficial WhatsApp Web automation, QR-session scraping, browser extensions, or wa.me links for automated sending.
+3. Read current official documentation. Use a configurable supported API version. Document the tested version and date.
+4. Support the provider's actual account/onboarding model. Do not assume old WABA-only guides apply to every account. Model provider account references and sender references clearly; retain any WABA, WAAC, messaging-account, or other identifiers only as required by the supported onboarding mode.
+5. Provide a real setup guide for the business account/portfolio, number ownership/registration, sender ID, scoped service credentials, applicable approval/verification/billing, HTTPS callback, and webhook subscriptions.
+6. Do not assume an existing WhatsApp/WhatsApp Business App number can be reused unchanged. Check current migration/coexistence eligibility and document the supported path.
+7. Keep tokens, app secrets, and webhook secrets on the server/secret manager. Mask settings; never return raw tokens to the browser or logs.
+8. Add a server-side sender health/configuration check and an authorized test-send action.
+9. Implement an official supported outbound template-message path with typed parameter validation.
+10. Record internal message ID, authorized sender, recipient reference, template/version/language, correlation ID, provider message ID, attempts, timestamps, and failure information.
+11. Implement verification of the webhook setup handshake and validation of incoming provider signatures against the exact raw request bytes, using the provider's current specification.
+12. Match callbacks to a configured organization/account/sender and message. Never let an untrusted payload create a new tenant association.
+13. Durably store accepted webhook events before acknowledging them; process asynchronously and deduplicate repeated callbacks.
+14. Receive real outbound status events and inbound replies.
+15. Expose connection problems accurately. Missing keys must never activate a “successful demo” fallback in production.
+
+Messaging policy:
+- Track opt-in evidence, source, time, purpose/categories, and opt-outs.
+- Only contact permitted recipients; recheck consent before dispatch.
+- Follow current approved-template and customer-service-window rules. Do not treat an arbitrary custom text box as permission to send outside the allowed window.
+- For optional newer mechanisms, such as a provider-supported utility/direct-send capability, require explicit account eligibility and verified current documentation before enabling it. Default to the established approved-template route when eligibility is uncertain.
+- Do not claim a template is approved merely because a user saved it.
+- Classify message category according to the provider's rules, not only the application's internal category label.
+- Never include full payment-card data, credentials, sensitive identifiers, or unnecessary student medical information.
+- Give users an appropriate school contact/escalation path.
+
+Early live proof:
+- Use an owner-authorized test recipient who has opted in.
+- Send a unique test reference through the real server adapter.
+- Retain the provider's actual message identifier.
+- Confirm the test recipient receives the correct message from the expected sender.
+- Verify a corresponding authentic delivery callback is stored and displayed.
+- Test an inbound reply and its correct thread/sender association.
+- Only display READ when such an event actually arrives and is available. Delivery/read availability and recipient behavior cannot be guaranteed by application code.
+- If credentials, number onboarding, template approval, network access, or a recipient are unavailable, mark this phase BLOCKED EXTERNAL and list the missing item. Continue independent modules, but do not mark WhatsApp LIVE VERIFIED.
+
+Exit gate:
+Visible WhatsApp UI + real outbound send + genuine matching callback + real inbound reply, or an explicit external blocker. Passing mocked tests alone is insufficient.
+
+============================================================
+PHASE 3 — OWNER SETUP, PEOPLE, ADMISSIONS, AND TRANSFERS
+============================================================
+
+Tasks:
+- Complete school/branch CRUD, identity, branch settings, activation/deactivation, and scoped dashboards.
+- Implement user invitations through configured email, profiles, assignments, access revocation, roles, and overrides.
+- Keep source-of-truth permissions on the server; invalidate stale caches after permission changes.
+- Principal assignment/removal must update access; removing a branch assignment must remove its effective access.
+- Implement admissions with draft/submitted/changes-requested/approved/rejected states, attachments, history, comments, and authorized edits.
+- Approving an admission creates the student's enrollment once, not once per retry/double-click.
+- Implement transfers with approval, destination, enrollment state changes, history, and associated record handling.
+- Search and exports must inherit all scope filters.
+
+End-to-end acceptance:
+Owner creates branch → assigns principal → configures permissions.
+Office creates admission → submits → principal reviews documents → approves → roster/enrollment and counts update.
+Repeat approval and concurrent requests do not create duplicate students.
+An unrelated principal cannot review the application.
+
+============================================================
+PHASE 4 — CLASSROOM OPERATIONS AND LEAVE
+============================================================
+
+Tasks:
+- Academic structure: classes/sections, subjects, teacher assignments, students/enrollment, and rosters.
+- Timetable and upcoming classes from stored schedules, including time conflicts and school timezone.
+- Attendance drafts and final submission; present/absent/late/excused; bulk marking.
+- Prevent duplicate class/date/session registers using a defined session model.
+- Corrections require permission, reason, before/after history, and a clear lock/reopen policy.
+- Store notification/outbox events only after a successful attendance transaction.
+- Homework/classwork drafts, instructions, attachments, class assignments, deadlines, scheduled publication, and publication.
+- Scheduled publication runs on the server even when every browser is closed.
+- Student submissions, safe attachments, timestamps, feedback, and allowed resubmission rules.
+- Materials/notes organization and lesson plans submitted for principal review.
+- Staff/student leave, date validation, requested days, supporting documents, decision history, and conflict policy.
+
+Acceptance:
+Teacher saves attendance → assigned parent sees the correct child's status in another authenticated session.
+Draft attendance sends no absence alert.
+Teacher publishes class homework → only the correct class/linked guardians can see it.
+Student submits → teacher reviews → student reads feedback.
+Leave submit → principal decision → requester sees comments.
+
+============================================================
+PHASE 5 — PRINCIPAL REVIEW, RESULTS, AND FAMILY PORTALS
+============================================================
+
+Tasks:
+- Consolidated approval centre with explicit workflow transitions and audit records.
+- Review teacher performance, lesson plans, timetables, exams, and marks/results.
+- Draft exams and approved/published schedules.
+- Marks validation, maximum scores, optional absence/exemption semantics, drafts, moderation, review, approval, and publication.
+- Distinguish approval from publication if the school requires scheduled result release.
+- Generate real report-card documents from approved/published data.
+- Restrict modifications to already published results through a recorded correction/reapproval policy.
+- Discipline/wellbeing cases, parent complaints, meetings, and follow-up.
+- School/class announcements with audience filtering and server-side scheduled publication.
+- Parent/student dashboards, linked-child switching, attendance history, homework, results, timetable, holidays/events, profile, and documents.
+- School-controlled teacher messaging; scoped in-app conversations, unread state, and notifications.
+- WhatsApp conversations must remain distinguishable from in-app messages; never label an in-app reply as a WhatsApp send.
+
+Acceptance:
+Teacher submits marks → principal approves/publishes → linked student downloads the correct report card.
+Draft or rejected results never leak.
+Announcements reach only the intended branch/class/role audience.
+Parent messaging disappears and is rejected server-side when disabled.
+Cross-child and cross-class document requests are denied.
+
+============================================================
+PHASE 6 — FEES, PAYMENTS, ACCOUNTING, AND PAYROLL RECORDS
+============================================================
+
+Tasks:
+- Fee structures by academic year/class/branch, fee items, invoice generation, due dates, schedules, outstanding balances, and authorized corrections.
+- Monetary values stored as exact integer minor units or a suitable exact decimal type, never binary floating-point calculations.
+- Discounts, scholarships, fines, approval limits, reasons, and ledger entries. Applying an adjustment changes the correct outstanding item exactly once.
+- Record offline collections with authorized verification and traceability.
+- Online payment integration through a legitimate supported India-capable gateway; verify current official docs, merchant eligibility, payment methods, and sandbox behavior.
+- Create payment orders server-side from authoritative unpaid amounts and ownership checks.
+- Verify gateway signatures/webhooks and reconcile amounts, currency, merchant/account, order ID, payment ID, and terminal status.
+- A browser redirect, client callback, or “Pay” click is not payment confirmation.
+- Payment states include initiated, processing, pending verification, confirmed/captured, failed, cancelled, expired where applicable, and refund/adjustment handling.
+- Prevent concurrent double payment application, repeated webhook settlement, duplicate receipt numbers, and amount tampering.
+- Issue receipts only for verified confirmed collections; one authoritative receipt record per confirmed payment/allocation.
+- Handle partial payment/allocation rules explicitly. Never silently overpay or double-allocate.
+- Pending/uncertain payments remain unresolved until provider reconciliation; support the browser closing before callback.
+- Paid invoices cannot be casually edited; use a documented adjustment/refund workflow.
+- Expenses, vendor records, invoices, category/date filters, bank references, and reconciliation.
+- Payroll calculations/records, authorized approvals, deductions, payment references, and history.
+- Unless a separate legitimate payout integration is explicitly in scope, payroll “paid” records a verified external payout; it does not claim that the app transferred salaries.
+- Authorized financial reports, statements, exports, downloads, and printing.
+
+Acceptance:
+Parent reviews own child's fees → gateway sandbox payment → verified backend confirmation → invoice allocations/ledger update → receipt.
+Failure/cancellation/pending verification produces no confirmed receipt.
+Duplicate/out-of-order callbacks and modified amounts cannot alter balances incorrectly.
+Teacher cannot mutate financial data.
+Successful payment creates a durable receipt-notification event; unsuccessful payment does not.
+
+============================================================
+PHASE 7 — COMPLETE WHATSAPP AUTOMATIONS AND COMMUNICATION CENTRE
+============================================================
+
+Build on the live sender/webhook foundation from Phase 2.
+
+SENDER ADMINISTRATION
+- Multiple legitimately onboarded sender numbers/accounts.
+- Owner-only add/configure/disable/default selection, credential rotation, and sender health.
+- Branch and category routing: fees, attendance, general notices, exams, holidays, events, and receipt/report notifications where supported.
+- Sender selection restricted to authorized numbers; no arbitrary “From” number spoofing.
+- A default change affects future messages. A confirmed scheduled message retains its selected sender unless an authorized user explicitly reassigns and reconfirms it.
+- If a sender is disabled/expired before dispatch, block the job or request reassignment. Never silently switch to another sender.
+- New sender numbers must pass onboarding/configuration and real test delivery before being treated as available for production.
+
+COMPOSER AND AUDIENCE
+- Choose organization/school/branch only within scope.
+- Individual recipient search; permitted parent/student/staff groups.
+- Application recipient groups normally expand to separate authorized API recipient messages. Do not assume ordinary WhatsApp group-chat bulk sending is supported.
+- Exact eligible-recipient count plus skipped recipients/reasons: missing consent, invalid contact, permission restriction, no matching records, or opted out.
+- Preview template, approved language/version, parameters, sender, content, schedule, and estimated cost only when a real tariff source is configured.
+- Validate required variables and parameter types. No missing placeholders.
+- Require a final confirmation before sending/scheduling.
+- Preview does not authorize access to unrelated student or staff data.
+- If the recipient set materially changes before dispatch, apply a documented snapshot/reconfirmation policy; it must never expand beyond the confirmed audience without authorization.
+
+AUTOMATED SCHOOL WORKFLOWS
+1. Fee reminders: outstanding/overdue rules, days before/after due date, cadence, school quiet hours, maximum follow-ups, opt-outs, and audit.
+2. Attendance: submit final absence → permitted guardian alert; no alerts for draft registers.
+3. Attendance correction: send an appropriate correction/update when needed; do not duplicate an original absence warning.
+4. Exam schedule and permitted result/report notifications.
+5. Homework/class announcements only when school policy allows.
+6. Holidays and school events.
+7. Confirmed payment receipt notification/link after verified payment only.
+8. Admission/leave status notices if explicitly configured.
+9. Manual/bulk school communications using provider-supported message types.
+
+WORKERS AND RELIABILITY
+- Persist schedule and recipient state in the database; browser timers are not a scheduler.
+- Use a durable outbox written in the same transaction as the business event.
+- Use stable unique business-event/destination keys to prevent repeated enqueueing.
+- Example business keys must include organization/branch, event record/revision, recipient, category, and purpose as appropriate.
+- Recheck authorization, current consent/opt-out, sender readiness, template eligibility, student/enrollment linkage, and fee balance immediately before sending.
+- Suppress a queued fee reminder if the relevant balance has already been paid.
+- Do not send after cancellation wins the dispatch race; explain when a message has already been submitted and cannot be recalled.
+- Retry known retryable failures using capped exponential backoff/jitter and provider limits.
+- Treat invalid credentials, policy restrictions, unsupported parameters, or rejected templates as actionable failures, not infinite retry loops.
+- Preserve per-recipient attempts and a dead-letter/review queue.
+- Bulk retry must skip recipients already accepted/sent/delivered/read.
+- A timeout after provider submission can have an uncertain outcome. Do not blindly resend and pretend exactly-once external delivery is guaranteed. Use provider idempotency/reconciliation where supported and an explicit uncertain/review-required state otherwise.
+- Handle worker restarts, queue redelivery, duplicate webhooks, and out-of-order status events without corrupting business records.
+- Do not regress delivered/read display to queued/sent because an older callback arrived later.
+- Preserve raw normalized event history for troubleshooting under an appropriate retention/privacy policy.
+
+STATUS AND INBOX
+Separate internal job status from provider delivery status:
+- draft, scheduled, queued, processing;
+- provider accepted/submitted with message ID;
+- sent, delivered, read only from authoritative provider events;
+- failed with reason/code;
+- cancelled before dispatch;
+- suppressed/skipped;
+- uncertain/reconciliation required.
+API acceptance is not proof of delivery; read events may never be available.
+
+- History filters: branch, sender, audience, category, date, job/delivery status.
+- Per-recipient details, error code/reason, retry eligibility, attempts, and timestamps.
+- Incoming messages/replies linked to the correct sender, recipient identity, branch, and conversation.
+- Support current provider identity types; do not assume every incoming identifier is a visible phone number.
+- Resolve ambiguous identities safely; do not expose a child's records merely because someone messages a number.
+- Track the customer-service window from authentic inbound events; allow freeform replies only when policy permits.
+- Staff escalation/assignment, permissions, and conversation audit.
+- Notification preferences and opt-outs update the real send eligibility rules.
+
+Acceptance:
+An unpaid-fee reminder is scheduled → app/browser closes → worker runs → real recipient receives it → authentic callback updates history.
+Payment before scheduled dispatch suppresses the reminder.
+Attendance submission creates one eligible absence alert; resubmission does not duplicate it.
+Changing default sender does not silently change already confirmed schedules.
+Bulk retry skips successful recipients.
+Inbound reply appears only in its authorized thread.
+Disconnected, expired, rejected, and provider-unavailable states never become fake successful sends.
+
+============================================================
+PHASE 8 — REPORTS, FILES, SETTINGS, AUDIT, AND RECOVERY
+============================================================
+
+Tasks:
+- Real role/branch-scoped dashboards, reporting, search, date ranges, academic years, sorting, and pagination.
+- Daily/weekly principal reports for owner with correct authorization.
+- Certificates, report cards, fee statements, receipts, and other authorized documents generated from stored data.
+- Print/download/export controls with no cross-scope fields or spreadsheet formula injection.
+- Private upload validation, content/type/size constraints, safe names, malware handling as appropriate, scoped preview/download/removal, retention, and access revocation.
+- School branding, currency/date/timezone preferences, terms/years, and enforceable module settings.
+- Notification and channel preferences affect real behavior.
+- Audit view and exports: actor, record, action, before/after fields, reason, time, organization/school/branch. Protect audit integrity and avoid storing secrets/unnecessary sensitive text.
+- Scheduled encrypted database/file backups using a supported deployment mechanism.
+- Defined retention, access restrictions, restoration procedure, and a restore drill.
+- A frontend JSON download is a demo export, not an operational backup.
+- Restore testing occurs in an isolated environment. Document actual recovery objectives and measured results instead of claiming untested guarantees.
+- Keep patient/medical, identity, payment, and student data exposure limited to the required educational purpose.
+
+Acceptance:
+Reports reconcile to scoped database records.
+An unauthorized export/file URL is denied.
+A real backup restores data and file references in an isolated test environment.
+Security/module/preferences settings demonstrably change the relevant server behavior rather than merely saving checkboxes.
+
+============================================================
+PHASE 9 — FULL REGRESSION, SECURITY, AND RESPONSIVE QA
+============================================================
+
+Write tests that verify business outcomes and failure boundaries.
+
+Required suites:
+- Database migrations and constraints.
+- API unit/integration tests.
+- Permission and organization/branch/class/child isolation.
+- Workflow state transitions, including invalid transitions and concurrent decisions.
+- Authentication, reset/session/revocation, rate limiting, CSRF, injection, and private file access.
+- Attendance and notification idempotency.
+- Homework publication/submission/review.
+- Marks approval/publication and report-card visibility.
+- Financial amount/currency tampering, concurrency, duplicated/replayed/out-of-order gateway callbacks.
+- WhatsApp signature validation, unknown sender/account, repeated callback, malformed payload, queue retries, opt-out, sender disabled, template rejected, and provider timeout.
+- Browser UI tests using multiple genuine test accounts/sessions, not only a demo role selector.
+- Keyboard focus, dialog behavior, readable errors, semantic status labels, safe touch targets, reduced motion, loading/error/empty states.
+- Desktop around 1440px, tablet around 768px, and phone around 390px; also check narrow phones and orientation changes.
+- No body-level horizontal overflow in primary phone flows. Use record cards, responsive columns, or explicit table scrolling where appropriate.
+- School-friendly simple navigation, readable fees/attendance controls, and visible WhatsApp access.
+- Basic performance under a declared realistic pilot dataset and message volume. Report actual measurements and limits.
+
+Distinguish:
+- Unit/mock provider tests.
+- Provider sandbox/API contract tests.
+- Authorized live provider tests.
+Never present a successful mocked test as a live delivery/payment result.
+
+Maintain a defect list with severity, reproduction steps, fix, and regression evidence. Critical access-control, financial-integrity, secret-exposure, data-loss, and false-success defects block release.
+
+Exit gate:
+All required implemented features have evidence. No open critical/blocking defects. Any lower-risk residual issue is disclosed with its effect. Do not silently weaken assertions or remove failing tests to obtain a green result.
+
+============================================================
+PHASE 10 — DEPLOYMENT, LIVE ACCEPTANCE, AND HANDOVER
+============================================================
+
+Tasks:
+- Reproducible deployment for web/API, workers/schedulers, database, queue, and private storage.
+- HTTPS, environment isolation, production secrets, correct proxy/cookie/CORS settings, health/readiness checks, migrations, logging, and monitoring.
+- Protect backup access and administrative operations.
+- Verify jobs still execute after the frontend/browser closes and after a worker restart.
+- Use real production integration configuration only when the owner authorizes it.
+- Run authorized WhatsApp live verification with a designated opted-in recipient and approved sender/template.
+- Confirm the sender identity on the recipient device, provider message ID, callback correlation, and reply routing.
+- Do not demand or fabricate READ evidence if privacy/provider behavior prevents it.
+- Run gateway sandbox verification; a production payment smoke test requires explicit owner authorization and a valid merchant setup.
+- Verify email recovery/invites if included in release claims.
+- Restore a backup in an isolated environment; document rollback and recovery.
+- Remove development credentials, fixtures, debug endpoints, demo permission switching, and public test webhooks from production.
+- Provide source code, migrations, lockfiles, configuration examples, deployment/rollback instructions, operator guide, user roles, backup procedure, and troubleshooting.
+- Supply the final updated source ZIP and the deployed URL only when deployment is actually completed.
+
+FINAL RELEASE GATES — ALL NINE CORE FLOWS
+1. Owner creates branch → assigns principal → principal has exactly the intended scope.
+2. Office admission → principal decision → single correct enrollment/roster update.
+3. Teacher attendance → parent visibility → configured real WhatsApp event without duplicates.
+4. Teacher homework publication → correct portal visibility → submission → feedback.
+5. Teacher marks → principal approval/publication → correct downloadable student report.
+6. Parent fee selection → verified gateway outcome → accurate ledger/balance → confirmed receipt.
+7. Principal announcement → selected audience only.
+8. Owner sender setup → authorized fee-reminder schedule → real worker execution → provider evidence/history.
+9. Staff leave request → recorded principal decision → requester receives the result.
+
+WHATSAPP CANNOT BE CALLED COMPLETE UNTIL
+- Its visible UI routes and all permitted controls work.
+- Real provider setup is documented and configured.
+- At least one authorized real send is received from the correct sender.
+- Authentic callbacks update the correct stored message.
+- An inbound reply reaches the correct authorized thread.
+- A scheduled message executes while the browser is closed.
+- Paid fees/opt-outs/invalid scope suppress inappropriate sends.
+- Failed-only retry does not resend successful recipients.
+- Expired credentials/provider errors are shown honestly.
+- No secrets appear in the frontend, repository, exported documents, or logs.
+- Current policy/template/customer-service-window requirements are followed.
+
+If an external requirement is missing, finish all independent code and tests, document the exact blocker, and say “not live verified.” Do not claim “fully working,” “production ready,” or “100% correct” simply because all pages render.
+
+============================================================
+MINIMUM DATA AND SERVICE INVENTORY
+============================================================
+
+Design concrete entities/relationships for:
+Organization; School; Branch; AcademicYear; Term; User; Session; Role; Permission; RoleAssignment; BranchAssignment; ClassSection; Subject; TeacherAssignment; Student; Guardian; GuardianStudentLink; Enrollment; Admission; Transfer; ApprovalRequest; ApprovalDecision; AttendanceSession; AttendanceEntry; AttendanceRevision; Homework; AssignmentRecipient; Submission; Feedback; Material; LessonPlan; Exam; Assessment; MarkEntry; ResultPublication; Timetable; LeaveRequest; DisciplineCase; Complaint; Meeting; Announcement; AudienceRule; CalendarEvent; FeeStructure; Invoice; InvoiceItem; Concession; PaymentOrder; Payment; PaymentAllocation; Refund/Adjustment; Receipt; Vendor; Expense; PayrollRun/PayrollRecord; ReconciliationEntry; FileAsset; Certificate; Notification; Conversation; ConversationMessage; AuditEvent; Setting; IntegrationAccount; WhatsAppSender; SenderRoutingRule; MessageTemplate; RecipientConsent; Campaign/MessageRequest; MessageRecipient; MessageAttempt; DeliveryEvent; InboundMessage; OutboxEvent; ScheduledJob; BackupRecord.
+
+Adapt entity names to the chosen architecture. Do not create meaningless tables merely to match this list; account for each responsibility and its constraints. Include appropriate indexes, uniqueness, tenant-safe references, and lifecycle rules.
+
+Service/API responsibilities must include:
+- Authentication and session management.
+- Authorized school/branch/user/role administration.
+- Class/student/guardian/enrollment management.
+- Admission/transfer approval.
+- Attendance save/submit/correct.
+- Homework/material/lesson-plan creation/publication/submission.
+- Marks/exam/timetable submission/approval/publication.
+- Leave, complaints, discipline, meetings, announcements.
+- Fees/invoices/concessions/collections/expenses/payroll/reconciliation.
+- Gateway order creation and signed event handling.
+- WhatsApp sender validation, templates, preview, send/schedule/cancel, per-recipient history, retry, webhooks, inbox, opt-in/out.
+- Scoped reporting/export/private files.
+- Settings, notifications, audit, backup/recovery.
+- Worker health and integration health without leaking secrets.
+
+Define HTTP methods, payload validation, scope checks, errors, pagination, idempotency, and transaction boundaries. Do not expose “mark delivered” or “mark paid” production endpoints that trust an arbitrary client flag.
+
+============================================================
+WORKING METHOD AND REQUIRED PHASE REPORT
+============================================================
+
+For every phase:
+1. Read the repository's current implementation/progress notes.
+2. List the exact features and files this phase will change.
+3. Implement a coherent vertical slice that preserves earlier behavior.
+4. Run relevant meaningful tests and the retained UI checks.
+5. Fix observed regressions before declaring the phase done.
+6. Update feature coverage, API/schema documentation, tests, and blockers.
+7. Create a clear checkpoint/commit when appropriate.
+8. Report:
+   - What actually works.
+   - Which screens/API/services were connected.
+   - Commands/tests run and real results.
+   - New migrations or configuration keys.
+   - External setup still required.
+   - Any defects/limitations.
+   - The next phase.
+9. Continue to the next independent phase when the gate passes. Do not stop at a planning-only answer.
+10. If blocked externally, identify it precisely, continue independent work, and keep the final release gate open.
+
+Do not execute the whole project as one unreviewable code dump. Do not redesign the UI during unrelated backend phases. Do not repeatedly regenerate completed working modules.
+
+============================================================
+COPY-PASTE CONTINUATION PROMPTS
+============================================================
+
+START:
+“Read the attached latest source ZIP, workflow image, and this complete implementation specification. The current app is a frontend prototype. Preserve its simplified UI. Begin Phase 0, write the coverage/architecture/permission plan into the repository, then implement Phase 1. Make WhatsApp visible and plan its real integration for Phase 2. Follow every phase gate; do not claim live integration without actual provider evidence.”
+
+CONTINUE A PHASE:
+“Continue Phase [NUMBER] of the School Management System specification. Read IMPLEMENTATION_PLAN.md, FEATURE_COVERAGE.csv, TEST_EVIDENCE.md, DECISIONS.md, and BLOCKERS.md first. Implement the remaining phase work in the existing repository, preserve the UI and completed features, run the relevant tests, and report evidence and genuine blockers. Do not restart the project or replace real integrations with mocks.”
+
+FOCUSED WHATSAPP FIX:
+“Implement the complete WhatsApp requirements from Phases 2 and 7. Repair navigation so WhatsApp is explicit on desktop, phone, and tablet. Connect the official supported provider server-side, verify setup/signatures, implement durable scheduling and per-recipient history, respect opt-in/current messaging rules, and prevent duplicate or inappropriate reminders. A real provider message ID plus authentic delivery callback and authorized recipient receipt are required for LIVE VERIFIED. wa.me links, localStorage states, and success toasts are not substitutes.”
+
+FINAL AUDIT:
+“Perform the Phase 9 and Phase 10 release checks against every workflow-image feature and all nine end-to-end flows. Check direct API authorization, financial integrity, real WhatsApp evidence, jobs with the browser closed, recovery, responsive UI, and secrets. Fix failures, preserve regression tests, and list remaining external blockers. Produce the updated source ZIP and deployment handover only after reporting what is actually verified.”
+
+============================================================
+OFFICIAL WHATSAPP REFERENCES AND CHANGE CONTROL
+============================================================
+
+Check these again at implementation time:
+- WhatsApp Business Messaging Policy:
+  https://business.whatsapp.com/policy
+  Current retrieved page redirects to https://whatsappbusiness.com/policy/
+- Meta WhatsApp Business Platform documentation:
+  https://developers.facebook.com/docs/whatsapp/cloud-api/overview
+- Meta-maintained Postman collection:
+  https://www.postman.com/meta/whatsapp-business-platform/documentation/wlk6lh4/whatsapp-cloud-api
+- Meta account-model evolution briefing:
+  https://developers.meta.com/resources/videos/whatsapp-account-model-evolution/
+- Meta utility Direct Send briefing, for eligibility investigation only:
+  https://developers.meta.com/resources/videos/whatsapp-direct-send-api/
+
+Research note, 29 Oct 2026:
+The current policy retrieved for this specification requires opt-in, honoring opt-outs, approved templates for initiating conversations/outside the customer-service window, and permits certain non-template replies within the 24-hour customer-service window. Meta also describes evolving account structures and optional utility messaging mechanisms. Do not treat a product announcement or older sample payload as blanket eligibility or as overriding current policy. Implement the conservative approved-template path unless current official documentation and the actual account support an alternative.
+
+Provider API acceptance, a sent event, a delivery event, and a read event are different evidence. Never infer one from another. No application can guarantee that an offline recipient receives a message immediately or that read receipts will be emitted.
+
+END OF IMPLEMENTATION SPECIFICATION
+

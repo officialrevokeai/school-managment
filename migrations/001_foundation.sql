@@ -1,0 +1,31 @@
+CREATE TABLE organizations (
+ id text PRIMARY KEY, slug text UNIQUE NOT NULL, name text NOT NULL,
+ timezone text NOT NULL DEFAULT 'Asia/Kolkata', settings jsonb NOT NULL DEFAULT '{}', created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE schools (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), name text NOT NULL, active boolean NOT NULL DEFAULT true, UNIQUE(org_id,id));
+CREATE TABLE branches (id text PRIMARY KEY, org_id text NOT NULL, school_id text NOT NULL, name text NOT NULL, active boolean NOT NULL DEFAULT true, settings jsonb NOT NULL DEFAULT '{}', UNIQUE(org_id,id), FOREIGN KEY(org_id,school_id) REFERENCES schools(org_id,id));
+CREATE TABLE academic_years (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), name text NOT NULL, starts date NOT NULL, ends date NOT NULL CHECK(ends>=starts), UNIQUE(org_id,id), UNIQUE(org_id,name));
+CREATE TABLE terms (id text PRIMARY KEY, org_id text NOT NULL, year_id text NOT NULL, name text NOT NULL, starts date NOT NULL, ends date NOT NULL CHECK(ends>=starts), UNIQUE(org_id,id), FOREIGN KEY(org_id,year_id) REFERENCES academic_years(org_id,id));
+CREATE TABLE users (
+ id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), name text NOT NULL, email text NOT NULL,
+ password_hash text NOT NULL, role text NOT NULL CHECK(role IN ('owner','principal','teacher','office','parent','student')),
+ active boolean NOT NULL DEFAULT true, created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(org_id,id), UNIQUE(org_id,email)
+);
+CREATE TABLE branch_assignments (org_id text NOT NULL, branch_id text NOT NULL, user_id text NOT NULL, PRIMARY KEY(org_id,branch_id,user_id), FOREIGN KEY(org_id,branch_id) REFERENCES branches(org_id,id), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id));
+CREATE TABLE classes (id text PRIMARY KEY, org_id text NOT NULL, branch_id text NOT NULL, year_id text NOT NULL, name text NOT NULL, UNIQUE(org_id,id), UNIQUE(org_id,branch_id,year_id,name), FOREIGN KEY(org_id,branch_id) REFERENCES branches(org_id,id), FOREIGN KEY(org_id,year_id) REFERENCES academic_years(org_id,id));
+CREATE TABLE subjects (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), name text NOT NULL, UNIQUE(org_id,id), UNIQUE(org_id,name));
+CREATE TABLE teacher_assignments (org_id text NOT NULL, user_id text NOT NULL, class_id text NOT NULL, subject_id text NOT NULL, PRIMARY KEY(org_id,user_id,class_id,subject_id), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id), FOREIGN KEY(org_id,class_id) REFERENCES classes(org_id,id), FOREIGN KEY(org_id,subject_id) REFERENCES subjects(org_id,id));
+CREATE TABLE students (id text PRIMARY KEY, org_id text NOT NULL, branch_id text NOT NULL, name text NOT NULL, user_id text, active boolean NOT NULL DEFAULT true, UNIQUE(org_id,id), UNIQUE(org_id,user_id), FOREIGN KEY(org_id,branch_id) REFERENCES branches(org_id,id), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id));
+CREATE TABLE enrollments (id text PRIMARY KEY, org_id text NOT NULL, student_id text NOT NULL, class_id text NOT NULL, active boolean NOT NULL DEFAULT true, UNIQUE(org_id,id), UNIQUE(org_id,student_id,class_id), FOREIGN KEY(org_id,student_id) REFERENCES students(org_id,id), FOREIGN KEY(org_id,class_id) REFERENCES classes(org_id,id));
+CREATE UNIQUE INDEX one_active_enrollment ON enrollments(org_id,student_id) WHERE active;
+CREATE TABLE guardian_links (org_id text NOT NULL, user_id text NOT NULL, student_id text NOT NULL, verified_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(org_id,user_id,student_id), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id), FOREIGN KEY(org_id,student_id) REFERENCES students(org_id,id));
+CREATE TABLE sessions (token_hash text PRIMARY KEY, org_id text NOT NULL, user_id text NOT NULL, csrf text NOT NULL, expires_at timestamptz NOT NULL, FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id));
+CREATE INDEX sessions_user ON sessions(org_id,user_id);
+CREATE TABLE recovery_tokens (token_hash text PRIMARY KEY, org_id text NOT NULL, user_id text NOT NULL, purpose text NOT NULL CHECK(purpose IN ('reset','invite')), expires_at timestamptz NOT NULL, used_at timestamptz, FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id));
+CREATE TABLE audit_events (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), branch_id text, actor_id text, operation text NOT NULL, entity text NOT NULL, entity_id text NOT NULL, changes jsonb NOT NULL DEFAULT '{}', reason text, created_at timestamptz NOT NULL DEFAULT now(), FOREIGN KEY(org_id,actor_id) REFERENCES users(org_id,id), FOREIGN KEY(org_id,branch_id) REFERENCES branches(org_id,id));
+CREATE INDEX audit_scope ON audit_events(org_id,branch_id,created_at);
+CREATE TABLE notifications (id text PRIMARY KEY, org_id text NOT NULL, user_id text NOT NULL, event_key text NOT NULL, title text NOT NULL, route text NOT NULL, read_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(org_id,user_id,event_key), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id));
+CREATE TABLE file_assets (id text PRIMARY KEY, org_id text NOT NULL, branch_id text NOT NULL, student_id text, class_id text, owner_id text NOT NULL, name text NOT NULL, mime text NOT NULL, bytes bytea NOT NULL, sha256 text NOT NULL, size integer NOT NULL CHECK(size>0 AND size<=5242880), created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(org_id,id), FOREIGN KEY(org_id,branch_id) REFERENCES branches(org_id,id), FOREIGN KEY(org_id,student_id) REFERENCES students(org_id,id), FOREIGN KEY(org_id,class_id) REFERENCES classes(org_id,id), FOREIGN KEY(org_id,owner_id) REFERENCES users(org_id,id));
+CREATE TABLE outbox (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), event_key text NOT NULL, kind text NOT NULL, data jsonb NOT NULL, status text NOT NULL DEFAULT 'queued' CHECK(status IN ('queued','processing','done','failed','uncertain')), available_at timestamptz NOT NULL DEFAULT now(), locked_at timestamptz, attempts integer NOT NULL DEFAULT 0, last_error text, UNIQUE(org_id,event_key));
+CREATE INDEX outbox_due ON outbox(status,available_at);
+CREATE TABLE worker_heartbeats (id text PRIMARY KEY, seen_at timestamptz NOT NULL DEFAULT now());

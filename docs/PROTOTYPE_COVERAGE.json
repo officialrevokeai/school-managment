@@ -1,0 +1,1570 @@
+[
+  {
+    "feature": "Responsive role-aware shell",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Desktop sidebar, tablet rail, mobile bottom navigation",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School identity and current role",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Visible school badge and demo account",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Page title, contextual search, year, notifications, profile",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Top bar destinations and scope",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Authorized multi-branch selector",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Owner and assigned principal branch controls",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Breadcrumbs and contextual actions",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Deep-page breadcrumb and primary controls",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Separate parent and student permissions",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Six clearly labelled fictional accounts",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Demo role switcher",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Choose account; never presented as production authorization",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Dashboard totals and alerts follow active scope",
+    "role": "Shared",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Recalculate and filter when scope changes",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Sign-in screen",
+    "role": "Shared",
+    "screen": "signin",
+    "route": "signin",
+    "action": "Choose demo account and validate credentials",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Password recovery",
+    "role": "Shared",
+    "screen": "signin",
+    "route": "signin",
+    "action": "Email form with explicit no-email-sent response",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Session expired",
+    "role": "Shared",
+    "screen": "signin",
+    "route": "signin",
+    "action": "Retain saved data and return to sign-in",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Access-denied screen",
+    "role": "Shared",
+    "screen": "denied",
+    "route": "denied",
+    "action": "Route guard and recovery account chooser",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Profile, contact preferences and documents",
+    "role": "Shared",
+    "screen": "profile",
+    "route": "profile",
+    "action": "Edit own contacts and download scoped documents",
+    "status": "Working demo"
+  },
+  {
+    "feature": "WhatsApp notification preferences",
+    "role": "Shared",
+    "screen": "profile",
+    "route": "profile",
+    "action": "Save local preference with disconnected-service label",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Scoped in-app notifications",
+    "role": "Shared",
+    "screen": "notifications",
+    "route": "notifications",
+    "action": "Unread count, open destination, mark as read",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Global school network overview",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Scoped totals and analytics",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School and branch comparison",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Campus performance table and branch detail",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Student and staff totals",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Enrolled and staff metrics",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance summaries",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Campus aggregates and daily registers",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Financial overview",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Collections and branch drill-down",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Pending approvals",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Queue and linked review drawers",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Recent activity",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Actor, record, timestamp, scope",
+    "status": "Working demo"
+  },
+  {
+    "feature": "System alerts",
+    "role": "Owner",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Integration and reconciliation alerts",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Schools and branches list, search and filters",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Find campus by school, name, city or status",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Add, view, edit and deactivate branches",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Branch form, detail, confirmation, retained records",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School identity and branch addresses",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "School field supports multiple school identities",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Assign and remove principals",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Edit branch assignment; update authorized principal scope",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Branch detail pages",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Enrollment, staff, principal, address and actions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Branch-specific settings and reports",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Settings drawer and scoped report builder",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 1: branch → principal → permissions",
+    "role": "Owner",
+    "screen": "branches",
+    "route": "branches",
+    "action": "Create campus, assign principal, open permissions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Manage principals, teachers, parents, students and office staff",
+    "role": "Owner",
+    "screen": "users",
+    "route": "users",
+    "action": "Role-aware user directory and form",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Invite and create user accounts",
+    "role": "Owner",
+    "screen": "users",
+    "route": "users",
+    "action": "Local invitation record, no email delivery claimed",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Edit roles and branch assignments",
+    "role": "Owner",
+    "screen": "users",
+    "route": "users",
+    "action": "User edit form and assigned class metadata",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Deactivate and reactivate access",
+    "role": "Owner",
+    "screen": "users",
+    "route": "users",
+    "action": "Confirmation and audit history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "User profiles and activity history",
+    "role": "Owner",
+    "screen": "users",
+    "route": "users",
+    "action": "Details, status, role, branch and timeline",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Create and edit roles",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Custom role definition with grants",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permission matrix: view, create, edit, approve, export and delete",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Baseline matrix; permanent deletion uses archive policy",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Branch, class, child and record scope",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Central scope function and policy matrix",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Explicit permission overrides",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Deny or restore baseline action with reason",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permission override confirmation and audit history",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Review confirmation, actor, reason and timestamp",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Custom role assignment and production authorization",
+    "role": "Owner",
+    "screen": "roles",
+    "route": "roles",
+    "action": "Design records describe role grants; demo identities remain fixed",
+    "status": "UI + design spec"
+  },
+  {
+    "feature": "Manage authorized financial records",
+    "role": "Owner / Office",
+    "screen": "finance",
+    "route": "finance",
+    "action": "Expenses, payments, fees, payroll and reconciliation",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Consolidated financial reports",
+    "role": "Owner / Office",
+    "screen": "finance",
+    "route": "finance",
+    "action": "Owner report builder across campuses",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Branch financial drill-down",
+    "role": "Owner / Office",
+    "screen": "finance",
+    "route": "finance",
+    "action": "Select branch before generating report",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Financial adjustments with reasons and history",
+    "role": "Owner / Office",
+    "screen": "finance",
+    "route": "finance",
+    "action": "Amount change, verification reason and audit",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Transaction and reconciliation history",
+    "role": "Owner / Office",
+    "screen": "finance",
+    "route": "finance",
+    "action": "Payment details, ledger and audit events",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School identity and branding",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Name, tagline and monogram",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Academic years and terms",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Year selector, term and academic preferences",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Global preferences and module configuration",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Module policy definitions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Configurable currency, timezone and date preferences",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "INR and DD MMM YYYY; timezone choices",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Security and data privacy preferences",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Two-factor, session and retention design policies",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Notification policies",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Teacher messaging, absence requests and channels",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Local demo backup and recovery",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Download and restore JSON snapshot",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Activity tracking",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Owner audit trail with scoped exports",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Production backups and scheduled recovery",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Server backup, encryption and disaster recovery integration",
+    "status": "Integration required"
+  },
+  {
+    "feature": "Production identity, security and privacy enforcement",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Server sessions, access checks and operational policies",
+    "status": "Integration required"
+  },
+  {
+    "feature": "Production module enablement and background tasks",
+    "role": "Owner",
+    "screen": "settings",
+    "route": "settings",
+    "action": "Saved policy preferences require backend enforcement",
+    "status": "Integration required"
+  },
+  {
+    "feature": "School overview and performance",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Assigned-campus metrics",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance and discipline overview",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Registers, wellbeing cases and alerts",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Pending admissions and student transfers",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Principal approval queue",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Leave requests and approval comments",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Scoped leave detail and decision history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Timetable and exam approvals",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Academic queue and dedicated screens",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Teacher review tasks",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Teacher review form with follow-up",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Parent complaints and meetings",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Case management and meeting scheduling",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School announcements",
+    "role": "Principal",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Create, select audience and publish",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review, approve, reject, request changes",
+    "role": "Principal",
+    "screen": "approvals",
+    "route": "approvals",
+    "action": "Submitted details, required comments and confirmation",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Supporting documents",
+    "role": "Principal",
+    "screen": "approvals",
+    "route": "approvals",
+    "action": "Preview samples; upload and download local files",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Decision status and history",
+    "role": "Principal",
+    "screen": "approvals",
+    "route": "approvals",
+    "action": "Recorded actor, comment and timestamp",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 2: office admission → principal decision → student record",
+    "role": "Principal",
+    "screen": "approvals",
+    "route": "approvals",
+    "action": "Approval adds student and updates branch total",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review teacher performance",
+    "role": "Principal",
+    "screen": "academics",
+    "route": "academics",
+    "action": "Outcome, observations and follow-up",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review lesson plans",
+    "role": "Principal",
+    "screen": "academics",
+    "route": "academics",
+    "action": "Objectives, resources, comments and decisions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Approve exam schedules and results",
+    "role": "Principal",
+    "screen": "academics",
+    "route": "academics",
+    "action": "Published schedules and approved report cards",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review timetable changes",
+    "role": "Principal",
+    "screen": "academics",
+    "route": "academics",
+    "action": "Proposal, supporting document and history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Manage parent complaints",
+    "role": "Principal",
+    "screen": "complaints",
+    "route": "complaints",
+    "action": "Open, in progress, resolved and response comments",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Manage parent meetings",
+    "role": "Principal",
+    "screen": "meetings",
+    "route": "meetings",
+    "action": "Student, teacher, date, time and agenda",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Monitor discipline and wellbeing",
+    "role": "Principal",
+    "screen": "discipline",
+    "route": "discipline",
+    "action": "Restricted case record and support plan",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Daily and weekly owner reports",
+    "role": "Principal",
+    "screen": "reports",
+    "route": "reports",
+    "action": "Date range, campus scope, generate, print and download",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permission-scoped reports",
+    "role": "Principal",
+    "screen": "reports",
+    "route": "reports",
+    "action": "Financial reports excluded from principal account",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 7: publish announcement to selected audience",
+    "role": "Principal",
+    "screen": "announcements",
+    "route": "announcements",
+    "action": "Draft → audience confirmation → published portal notice",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Today’s timetable and upcoming classes",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Teaching plan and full weekly view",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance tasks",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Class register entry point",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Assignment submissions",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Submission counts, reviews and feedback",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Marks awaiting entry or approval",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Draft and pending review states",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Student progress alerts",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Low-attendance check-ins and profiles",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Announcements and leave status",
+    "role": "Teacher",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Published notices and recorded leave decisions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Class list, subjects and roster",
+    "role": "Teacher",
+    "screen": "classes",
+    "route": "classes",
+    "action": "Assigned Science classes 9 A and 9 B",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Scoped student profiles",
+    "role": "Teacher",
+    "screen": "classes",
+    "route": "classes",
+    "action": "Parent contact, attendance and approved progress",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Select class and date",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Assigned class choices and date input",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Present, absent, late and excused",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Explicit per-student controls",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Bulk marking",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Mark all present",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Save attendance draft",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Resume local draft after reload",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Submit attendance with validation",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Every student must be marked",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permitted corrections",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Reason required and prior entries audited",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 3: teacher attendance → portals → communication history",
+    "role": "Teacher",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Submit, scoped notifications, failed disconnected WhatsApp record",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Create and edit homework or classwork",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Title, class, subject, instructions and due date",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attachments and deadlines",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Validated file uploads and date fields",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Assign and publish",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Class audience and publish confirmation",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Schedule homework",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Local scheduled record and explicit Publish now control",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review student submissions",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Answer, attachment downloads and feedback",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 4: teacher publishes → parent and student view",
+    "role": "Teacher",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Shared class-scoped published assignment",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Enter marks and feedback",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "Assessment roster and score fields",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Validate maximum scores",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "Numeric validation between zero and maximum",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Save marks drafts",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "Partial scores retained as draft",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Submit marks for review",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "All scores required before submission",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Track student progress",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "Approved average and attendance",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 5: marks → principal approval → report card",
+    "role": "Teacher",
+    "screen": "marks",
+    "route": "marks",
+    "action": "Pending → approved → downloadable student report",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Study materials and notes",
+    "role": "Teacher",
+    "screen": "materials",
+    "route": "materials",
+    "action": "Upload, organize by subject/class and publish",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Submit lesson plans for review",
+    "role": "Teacher",
+    "screen": "lessonplans",
+    "route": "lessonplans",
+    "action": "Objectives, activities, assessment and supporting resources",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Parent messaging through approved channels",
+    "role": "Teacher",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Class-scoped in-app conversations and WhatsApp composer",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Conversation history",
+    "role": "Teacher",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Read and reply within permitted student scope",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Class announcements",
+    "role": "Teacher",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Restricted to assigned-class audience",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Request leave",
+    "role": "Staff / Parent / Student",
+    "screen": "leave",
+    "route": "leave",
+    "action": "Type, dates, reason and supporting documents",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Track leave status and comments",
+    "role": "Staff / Parent / Student",
+    "screen": "leave",
+    "route": "leave",
+    "action": "Submitted details and decision history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 9: request leave → recorded approval",
+    "role": "Staff / Parent / Student",
+    "screen": "leave",
+    "route": "leave",
+    "action": "Create request, principal decides, requester reads response",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Linked-child and own-record portal",
+    "role": "Parent / Student",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Parent switches only linked children; student only self",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance, homework, exams and fees overview",
+    "role": "Parent / Student",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Child-scoped metric cards and module destinations",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Timetable, announcements and upcoming events",
+    "role": "Parent / Student",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Published school and class information",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance history and leave status",
+    "role": "Parent / Student",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Daily registers and approved leave records",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permitted leave requests",
+    "role": "Parent / Student",
+    "screen": "attendance",
+    "route": "attendance",
+    "action": "Selected linked child only",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Homework, notices and allowed submissions",
+    "role": "Parent / Student",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Instructions, files, answer entry and submission history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Teacher feedback",
+    "role": "Parent / Student",
+    "screen": "homework",
+    "route": "homework",
+    "action": "Recorded comments visible on own submission",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Exam timetable and results",
+    "role": "Parent / Student",
+    "screen": "exams",
+    "route": "exams",
+    "action": "Approved class schedules only",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Download report cards",
+    "role": "Parent / Student",
+    "screen": "exams",
+    "route": "exams",
+    "action": "Approved assessments only",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Fee dues, balance and payment history",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Child-specific statement and transaction statuses",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Confirmed receipts",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Download and print only for confirmed transactions",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review outstanding fee selection and amount",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Choose student fees, review method and total",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Payment processing state",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Explicit Processing before outcome",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Payment failed, cancelled and pending verification",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "No receipts and clear recovery destination",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 6: fee review → demo gateway → confirmed receipt",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Separate review, start, outcome and receipt steps",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Online fee payment integration",
+    "role": "Parent / Student",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Prototype gateway uses explicitly chosen demo outcomes",
+    "status": "Integration required"
+  },
+  {
+    "feature": "Weekly timetable",
+    "role": "Parent / Student",
+    "screen": "timetable",
+    "route": "timetable",
+    "action": "Responsive deliberately scrollable schedule",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Holidays and events",
+    "role": "Parent / Student",
+    "screen": "calendar",
+    "route": "calendar",
+    "action": "Date-labelled calendar cards and event details",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Teacher messaging controlled by school permissions",
+    "role": "Parent",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Hidden portal messaging when disabled; inbox and replies",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Profile documents, downloadable reports and certificates",
+    "role": "Parent / Student",
+    "screen": "documents",
+    "route": "documents",
+    "action": "Scoped document directory and generated demonstration documents",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Collections today and outstanding balances",
+    "role": "Office / Accountant",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Confirmed transaction and unpaid-fee metrics",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Pending admissions and upcoming payments",
+    "role": "Office / Accountant",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Admission queue and upcoming dues",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Expense summary, payroll and reconciliation alerts",
+    "role": "Office / Accountant",
+    "screen": "dashboard",
+    "route": "dashboard",
+    "action": "Ledger, staff payroll, verification tasks",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Admission forms and records",
+    "role": "Office / Accountant",
+    "screen": "admissions",
+    "route": "admissions",
+    "action": "Student, parent, class, date of birth and documents",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Submit admission for principal approval",
+    "role": "Office / Accountant",
+    "screen": "admissions",
+    "route": "admissions",
+    "action": "Draft → pending approval; decision history and return path",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Fee collection and outstanding balances",
+    "role": "Office / Accountant",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Student search, item selection and collection record",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Record payments and generate receipts",
+    "role": "Office / Accountant",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Confirmed collection reference required",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review payment history",
+    "role": "Office / Accountant",
+    "screen": "fees",
+    "route": "fees",
+    "action": "Transaction method, reference and status",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Fee structures and collection schedules",
+    "role": "Office / Accountant",
+    "screen": "feeStructures",
+    "route": "feeStructures",
+    "action": "Class, amount, frequency, due date and included services",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Discounts, scholarships and fines",
+    "role": "Office / Accountant",
+    "screen": "discounts",
+    "route": "discounts",
+    "action": "Student-scoped adjustment record with authorization reason",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Application of concessions to outstanding fees",
+    "role": "Office / Accountant",
+    "screen": "discounts",
+    "route": "discounts",
+    "action": "Select a fee, review the adjustment, confirm authorization, and retain before/after amounts",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Expenses and invoices",
+    "role": "Office / Accountant",
+    "screen": "expenses",
+    "route": "expenses",
+    "action": "Amount, vendor, category, date, reason and invoice attachments",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Financial adjustment and verification",
+    "role": "Office / Accountant",
+    "screen": "expenses",
+    "route": "expenses",
+    "action": "Reason, bank reference and audit history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Vendor records",
+    "role": "Office / Accountant",
+    "screen": "vendors",
+    "route": "vendors",
+    "action": "Contact details, category, notes and status",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Staff payroll and expense records",
+    "role": "Office / Accountant",
+    "screen": "payroll",
+    "route": "payroll",
+    "action": "Draft, approval review and verified paid record",
+    "status": "UI + design spec"
+  },
+  {
+    "feature": "Real payroll transfers",
+    "role": "Office / Accountant",
+    "screen": "payroll",
+    "route": "payroll",
+    "action": "Payment references record prior transfers; no money moved",
+    "status": "UI + design spec"
+  },
+  {
+    "feature": "Certificates, receipts and reports",
+    "role": "Office / Accountant",
+    "screen": "documents",
+    "route": "documents",
+    "action": "Create certificates, print, download and scoped exports",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Automatic pending-fee reminders",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Audience selection, template, schedule and monitoring record",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Selected-group notifications",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Group or individual recipients with exact count",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Manual and scheduled sends",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Preview and confirm, failed attempts or local scheduled requests",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Attendance message tracking",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Absence-generated communication records with failure reasons",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Exam, holiday and event alerts",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "General template variables and authorized categories",
+    "status": "Working demo"
+  },
+  {
+    "feature": "School / branch selection within scope",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Owner selector; other roles fixed to active branch",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Search recipients",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Names and guardians, individual checkboxes",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Template and variable fields",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Preview final composed message",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Authorized sender selection",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Branch and message-category checks",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Review before sending",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Audience, sender, count, schedule and final content",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Bulk and individual messaging",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Scoped parent, student, staff, and individual groups with per-recipient status",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Sent, scheduled, failed and cancelled states",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Status filters; no fabricated successful delivery",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Failure reasons and failed-recipient retry",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Retry skips successful recipients",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Filter by branch, sender, audience, date and status",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Global scope plus message history controls",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Setup-required, disconnected and service failure",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Explicit sender and composer states",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core flow 8: sender → fee reminder schedule → monitoring",
+    "role": "Owner / Principal / Teacher / Office",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Owner configures, accountant composes, history shows local schedule",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Manage multiple sender numbers",
+    "role": "Owner",
+    "screen": "senders",
+    "route": "senders",
+    "action": "Add and edit number, branch and categories",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Change default sender",
+    "role": "Owner",
+    "screen": "senders",
+    "route": "senders",
+    "action": "Confirmation and audit event",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Category-specific sender routing",
+    "role": "Owner",
+    "screen": "senders",
+    "route": "senders",
+    "action": "Fees, general, attendance, exams, holidays, events",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Masked credentials and restricted administration",
+    "role": "Owner",
+    "screen": "senders",
+    "route": "senders",
+    "action": "No actual provider secrets accepted",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Messaging permission controls",
+    "role": "Owner",
+    "screen": "senders",
+    "route": "senders",
+    "action": "Role/category restrictions and school messaging toggle",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Custom message templates",
+    "role": "Owner",
+    "screen": "templates",
+    "route": "templates",
+    "action": "Name, category and variable-based body",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Real WhatsApp sending, automation, delivery and read receipts",
+    "role": "Shared",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Disconnected; requires approved provider and background scheduler",
+    "status": "Integration required"
+  },
+  {
+    "feature": "Reply tracking on WhatsApp",
+    "role": "Shared",
+    "screen": "communication",
+    "route": "communication",
+    "action": "Provider integration required; in-app demo history is functional",
+    "status": "Integration required"
+  },
+  {
+    "feature": "Audit actor, action, time and school/branch",
+    "role": "Shared",
+    "screen": "audit",
+    "route": "audit",
+    "action": "Scoped history and exports",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Reasons and before/after values",
+    "role": "Shared",
+    "screen": "audit",
+    "route": "audit",
+    "action": "Status, permission and financial change history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Reusable search, filters, sort and clear-all",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Operational toolbar patterns",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Pagination and readable table scrolling",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Seven-row pages on general records",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Academic-year and date-range filters",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Current year, archived-year empty state, report range",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Permission-controlled actions and exports",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Central checks plus scope filtering",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Detail pages and drawers",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Records, supporting documents and history",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Create and edit forms",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Persistent labels, native constraints, contextual error text",
+    "status": "Working demo"
+  },
+  {
+    "feature": "File upload, validation, preview, download and removal",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "File type hints, size/count checks, sample and uploaded-file previews",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Confirmations and reversible archiving",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Explicit consequences, retained audit and archive restoration",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Status chips and helpful empty states",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Readable text; semantic color supplements labels",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Unsaved-change protection",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Modal dismissal, navigation and browser-leave guard",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Accessible dialogs and focus management",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Role, modal state, focus trap, escape and return focus",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Keyboard focus and navigation",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Visible focus, skip link and tab controls",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Responsive desktop, tablet and mobile",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "1440px full sidebar, 768px rail, 390px bottom nav",
+    "status": "Working demo"
+  },
+  {
+    "feature": "44px primary touch targets and contrast",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Control sizing, token definitions and component reference",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Default, hover, pressed, selected and disabled states",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "CSS interactions and component gallery",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Loading, empty, validation, failure and success states",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "State gallery and functional workflow outcomes",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Reduced-motion support",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Animation and transition override",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Indian names, INR and DD MMM YYYY",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Consistent demo dataset and formatting",
+    "status": "Working demo"
+  },
+  {
+    "feature": "Core workflow destinations",
+    "role": "Shared",
+    "screen": "design",
+    "route": "design",
+    "action": "Records stay accessible after completing each action",
+    "status": "Working demo"
+  }
+]

@@ -1,0 +1,2 @@
+ALTER TABLE homework ADD revision integer NOT NULL DEFAULT 1;
+CREATE TABLE assessment_revisions (id text PRIMARY KEY, org_id text NOT NULL, assessment_id text NOT NULL, revision integer NOT NULL, snapshot jsonb NOT NULL, reason text NOT NULL, recorded_by text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(org_id,assessment_id,revision), FOREIGN KEY(org_id,assessment_id) REFERENCES assessments(org_id,id), FOREIGN KEY(org_id,recorded_by) REFERENCES users(org_id,id));

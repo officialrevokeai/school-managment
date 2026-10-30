@@ -1,0 +1,23 @@
+# Docker on Linux — held pending release gates
+
+User selected Docker/Linux. No host/domain/secrets were supplied; Docker/psql are unavailable on this Windows executor. Container build, restricted PostgreSQL role, HTTPS and pg_dump/pg_restore have not been executed here.
+
+1. Resolve BLOCKERS.md and RELEASE_GATES.md before production release. Use Node 24 and npm ci --ignore-scripts, then npm run check locally.
+2. On the authorized host, install supported Docker/Compose and configure DNS/ports 80/443. Database/API/worker ports remain private. Images are pinned to [Node 24.22.2](https://nodejs.org/en/blog/release/v24.22.2/), [PostgreSQL 18.6](https://www.postgresql.org/docs/release/18.6/) and [Caddy 2.11.7](https://github.com/caddyserver/caddy/releases/tag/v2.11.7), verified against official sources on 30 October 2026. Resolve/test digests before release. Local runtime evidence uses installed Node 24.22.1.
+3. Copy .env.example to .env and deploy/runtime.env.example to .env.runtime; restrict permissions. .env holds independent random URL-safe DB passwords (32+ characters), domain, ACME email and backup passphrase. .env.runtime contains only PUBLIC_ORIGIN, application/provider/SMTP settings. Keep migrator/backup secrets out of web runtime. Never commit secrets.
+4. Run docker compose build, docker compose up -d database, docker compose run --rm migrate, then docker compose run --rm configure-db. The migration identity has DDL access; school_app has restricted data access and cannot update/delete audit history. Record actual results.
+5. Securely pipe one private JSON object on stdin to docker compose run --rm -T web node build/scripts/provision.js. Fields: organization (lowercase slug), name, ownerName, email, password (12+ characters). Use private input without shell history/echoed secrets. Provisioning refuses a second initial organization. No default production password or fixtures are supplied.
+6. Start docker compose up -d web worker proxy. Verify liveness/readiness, secure session flags, Origin/CSRF controls, app DB privileges and worker heartbeat. PUBLIC_ORIGIN must equal the HTTPS browser origin. Leave TRUST_PROXY unset until the trusted topology is verified.
+7. Complete WHATSAPP_SETUP.md, PAYMENT_SETUP.md and real SMTP invite/recovery verification. Both web and worker need matching account-specific secret names. Missing services never enable a success fallback.
+8. Enable encrypted backups with docker compose --profile backups up -d backup. Provide an authorized off-host destination/key storage and execute BACKUP_RESTORE.md on an isolated PostgreSQL database.
+9. Run all nine staging acceptance flows across genuine accounts/devices, including authentic callbacks, sandbox payment, browser-closed schedules and worker restart. Supply a production URL/final source archive only after actual deployment and acceptance.
+
+Rollback: pin the tested app image/commit and take a verified encrypted backup before migration. Revert an image only when schema compatibility is established; otherwise restore into a separate database and validate before controlled cutover. Never delete the current volume as a shortcut.
+
+JSON request logs omit bodies/tokens/contacts and include route template/status/request ID/latency. Monitor heartbeat, failed/uncertain jobs, rejected callbacks and backup failures. PGlite tests do not establish PostgreSQL multi-worker concurrency or production load capacity.
+
+Master administration: run `npm run platform:bootstrap -- ORGANIZATION EMAIL` as the migration operator for the existing initial owner. Master membership has no public grant endpoint. Run the restricted role configurator after every migration so newly added tables receive only their intended privileges. For Supabase, use SUPABASE_SETUP.md instead of the bundled local-PostgreSQL Compose database.
+
+Client IP acceptance: when deploying behind Caddy or another proxy, configure TRUST_PROXY only for the exact trusted proxy IP/CIDR. Otherwise all clients may appear as the proxy IP, causing shared rate limits or incorrect IP blocks. Verify the real address, IPv4/IPv6 normalization and rejection of forged X-Forwarded-For headers from a direct/untrusted client before enabling the production release. Never trust every network.
+
+Migration 015 enables tenant deletion cascades and master-workspace sessions. Existing sessions become school sessions and must sign in through concealed master access before platform operations. Preserve exact migration file bytes (SQL is LF-normalized by .gitattributes); do not rewrite recorded migration checksums. See SCHOOL_DELETION.md before enabling deletion in production, including the backup/provider scope and protected master organization.

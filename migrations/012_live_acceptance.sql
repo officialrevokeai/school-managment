@@ -1,0 +1,3 @@
+ALTER TABLE whatsapp_senders ADD live_verified_api_version text;
+ALTER TABLE message_attempts ADD provider_api_version text;
+CREATE TABLE live_acceptances (id text PRIMARY KEY, org_id text NOT NULL, sender_id text NOT NULL, recipient_id text NOT NULL, inbound_id text NOT NULL, verified_by text NOT NULL, api_version text NOT NULL, receipt_evidence text NOT NULL, browser_closed_confirmed boolean NOT NULL CHECK(browser_closed_confirmed), created_at timestamptz NOT NULL DEFAULT now(), FOREIGN KEY(org_id,sender_id) REFERENCES whatsapp_senders(org_id,id), FOREIGN KEY(org_id,recipient_id) REFERENCES message_recipients(org_id,id), FOREIGN KEY(org_id,inbound_id) REFERENCES inbound_messages(org_id,id), FOREIGN KEY(org_id,verified_by) REFERENCES users(org_id,id));

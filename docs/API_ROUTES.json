@@ -1,0 +1,702 @@
+[
+  {
+    "method": "POST",
+    "path": "/api/v1/academic-years",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/accounts",
+    "source": "server/accounts.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admissions",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admissions",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admissions/:id",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admissions/:id/decision",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admissions/:id/files",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admissions/:id/submit",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/announcements",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/announcements",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/assessments",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assessments",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/assessments/:id",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assessments/:id/correction",
+    "source": "server/revisions.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assessments/:id/decision",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assessments/:id/publish",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assessments/:id/submit",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/assignments",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/attendance",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/attendance",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/audit",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/forgot",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/login",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/logout",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/auth/me",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/reset",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/auth/sessions",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/sessions/revoke-others",
+    "source": "server/auth.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/branches",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/branches/:id",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/classes",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/context",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/conversations",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/conversations",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/conversations/:id/messages",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/dashboard",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/directory",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/events",
+    "source": "server/live-data.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/fee-structures",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/fee-structures",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/fees",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/files",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/files",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/files/:id",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/files/:id",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/guardian-links",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/homework",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/homework",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/homework/:id",
+    "source": "server/revisions.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/homework/:id/cancel-schedule",
+    "source": "server/revisions.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/homework/:id/publish",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/homework/:id/submissions",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/integrations/health",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/invoices",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/invoices/:id/adjustments",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/leave",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/leave",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/leave/:id/decision",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/notifications",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/notifications/:id/read",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/payments/accounts",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/payments/offline",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/payments/orders",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/permissions/overrides",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/organizations",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/platform/organizations/:id",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/organizations/:id/deletion/confirm",
+    "source": "server/school-deletion.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/organizations/:id/deletion/prepare",
+    "source": "server/school-deletion.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/platform/organizations/:id/users",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/platform/organizations/:id/users/:userId",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/platform/overview",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/platform/security",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/security/blocks",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/security/unblock",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/platform/security/unlock",
+    "source": "server/platform.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/profile",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/profile",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/receipts/:id",
+    "source": "server/finance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/records",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/records",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/records/:id",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/records/:id/archive",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/records/:id/decision",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/records/:id/document",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/records/:id/record-external-payroll",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/records/:id/submit",
+    "source": "server/operations.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/reports",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/reports/export",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/roles",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/roles",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/roles/:id",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/roles/assign",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/schools",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/schools",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/settings",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/settings",
+    "source": "server/reports.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/setup/owner",
+    "source": "server/setup.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/setup/status",
+    "source": "server/setup.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/students",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/students/:id",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/students/:id/login",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/students/:id/report-card",
+    "source": "server/academics.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/students/:id/teachers",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/subjects",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/submissions/:id/feedback",
+    "source": "server/classroom.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/teacher-assignments",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/terms",
+    "source": "server/governance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/transfers",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/transfers",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/transfers/:id/decision",
+    "source": "server/people.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/users",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/users",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/users/:id",
+    "source": "server/foundation.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/accounts",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/accounts/:id/sync-templates",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/consents",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/consents",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/history",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/inbox",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/overview",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/preview",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/reminder-rules",
+    "source": "server/automations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/reminder-rules",
+    "source": "server/automations.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/whatsapp/reminder-rules/:id",
+    "source": "server/automations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/replies",
+    "source": "server/replies.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/requests",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/requests/:id/cancel",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/requests/:id/retry",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/routing",
+    "source": "server/automations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/routing",
+    "source": "server/automations.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/senders",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/whatsapp/senders/:id",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/senders/:id/check",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/whatsapp/senders/:id/verify-live",
+    "source": "server/live-acceptance.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/whatsapp/templates",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/health/live",
+    "source": "server/app.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/health/ready",
+    "source": "server/app.ts"
+  },
+  {
+    "method": "GET",
+    "path": "/webhooks/meta/:id",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/webhooks/meta/:id",
+    "source": "server/whatsapp.ts"
+  },
+  {
+    "method": "POST",
+    "path": "/webhooks/razorpay/:id",
+    "source": "server/finance.ts"
+  }
+]

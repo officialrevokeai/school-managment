@@ -1,0 +1,11 @@
+ALTER TABLE organizations ADD COLUMN status text NOT NULL DEFAULT 'active' CHECK(status IN ('active','suspended','archived'));
+ALTER TABLE organizations ADD COLUMN updated_at timestamptz NOT NULL DEFAULT now();
+CREATE TABLE platform_admins (user_id text PRIMARY KEY REFERENCES users(id), granted_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE platform_events (id text PRIMARY KEY, actor_id text NOT NULL REFERENCES users(id), org_id text REFERENCES organizations(id), operation text NOT NULL, details jsonb NOT NULL DEFAULT '{}', reason text NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX platform_events_recent ON platform_events(created_at DESC);
+CREATE TABLE login_guards (key text PRIMARY KEY, scope text NOT NULL CHECK(scope IN ('account','ip')), ip text NOT NULL, failures integer NOT NULL, window_start timestamptz NOT NULL DEFAULT now(), locked_until timestamptz, updated_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX login_guards_locked ON login_guards(locked_until) WHERE locked_until IS NOT NULL;
+CREATE TABLE blocked_ips (ip text PRIMARY KEY, reason text NOT NULL, expires_at timestamptz NOT NULL, created_by text NOT NULL REFERENCES users(id), created_at timestamptz NOT NULL DEFAULT now());
+ALTER TABLE sessions ADD COLUMN created_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE sessions ADD COLUMN ip text;
+CREATE INDEX sessions_expiry ON sessions(expires_at);

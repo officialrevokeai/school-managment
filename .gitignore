@@ -1,0 +1,16 @@
+node_modules/
+build/
+.env
+.env.*
+!.env.example
+runtime/
+*.log
+*.zip
+test-results/
+*.apk
+*.aab
+*.jks
+*.p12
+*.keystore
+signing-private.json
+__pycache__/

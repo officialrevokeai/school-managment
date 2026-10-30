@@ -1,0 +1,20 @@
+SCHOOL MANAGEMENT SYSTEM — AUTHENTICATED APP
+
+Source: School_Management_System_v2
+Use http://127.0.0.1:3000 (localhost resolves to another service on this computer).
+
+1. Use Node 24, run npm ci --ignore-scripts, then npm run build.
+2. Keep connection strings and provider secrets privately in .env.
+3. Run npm run start. The development database persists at runtime/local-postgres.
+4. Sign in with your configured organization/email/school password.
+5. Hidden master entry: tap the login-page logo five times or press Alt+Shift+M, then sign in.
+6. Add real schools/branches/classes and accounts; no sample school records are seeded.
+7. Reports export CSV students, attendance, fees, published results, staff and counts.
+
+See MASTER_PANEL_CHECKLIST.md, SUPABASE_SETUP.md and RELEASE_GATES.md.
+Supabase MCP OAuth is configured; the app database transfer still requires DATABASE_URL.
+WhatsApp, gateway and SMTP need genuine provider credentials/live acceptance.
+Production deployment remains gated by all nine workflow checks.
+
+The dist/ and prototype/ folders retain the historical fictional frontend for reference.
+The running app serves web/ and server/ with authenticated persistent database records.

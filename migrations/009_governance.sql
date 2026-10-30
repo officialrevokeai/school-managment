@@ -1,0 +1,11 @@
+CREATE TABLE custom_roles (id text PRIMARY KEY, org_id text NOT NULL REFERENCES organizations(id), name text NOT NULL, base_role text NOT NULL CHECK(base_role IN ('principal','teacher','office','parent','student')), active boolean NOT NULL DEFAULT true, UNIQUE(org_id,id), UNIQUE(org_id,name));
+CREATE TABLE role_permissions (org_id text NOT NULL, role_id text NOT NULL, module text NOT NULL, action text NOT NULL CHECK(action IN ('view','create','edit','approve','export','archive')), PRIMARY KEY(org_id,role_id,module,action), FOREIGN KEY(org_id,role_id) REFERENCES custom_roles(org_id,id));
+ALTER TABLE users ADD custom_role_id text;
+ALTER TABLE users ADD preferences jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE users ADD FOREIGN KEY(org_id,custom_role_id) REFERENCES custom_roles(org_id,id);
+ALTER TABLE branches ADD address text NOT NULL DEFAULT '';
+ALTER TABLE branches ADD city text NOT NULL DEFAULT '';
+ALTER TABLE branches ADD phone text NOT NULL DEFAULT '';
+ALTER TABLE file_assets ADD archived_at timestamptz;
+CREATE TABLE admission_files (org_id text NOT NULL, admission_id text NOT NULL, file_id text NOT NULL, PRIMARY KEY(org_id,admission_id,file_id), FOREIGN KEY(org_id,admission_id) REFERENCES admissions(org_id,id), FOREIGN KEY(org_id,file_id) REFERENCES file_assets(org_id,id));
+CREATE TABLE user_permission_overrides (org_id text NOT NULL, user_id text NOT NULL, module text NOT NULL, action text NOT NULL, denied boolean NOT NULL, reason text NOT NULL, recorded_by text NOT NULL, PRIMARY KEY(org_id,user_id,module,action), FOREIGN KEY(org_id,user_id) REFERENCES users(org_id,id), FOREIGN KEY(org_id,recorded_by) REFERENCES users(org_id,id));

@@ -1,0 +1,105 @@
+name: school-management
+x-app: &app
+  image: school-management:3.0.0
+  build: .
+  env_file: .env.runtime
+  environment:
+    NODE_ENV: production
+    HOST: 0.0.0.0
+    PORT: 3000
+    WORKER_IN_API: 'false'
+    DATABASE_URL: postgresql://school_app:${APP_DB_PASSWORD:?set APP_DB_PASSWORD}@database:5432/school
+  restart: unless-stopped
+  read_only: true
+  tmpfs: ['/tmp']
+  security_opt: ['no-new-privileges:true']
+  cap_drop: ['ALL']
+  networks: [private]
+services:
+  database:
+    image: postgres:18.6-bookworm
+    environment:
+      POSTGRES_USER: school_migrator
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD}
+      POSTGRES_DB: school
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U school_migrator -d school']
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+    networks: [private]
+  migrate:
+    <<: *app
+    env_file: []
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://school_migrator:${DB_PASSWORD:?set DB_PASSWORD}@database:5432/school
+    command: ['node', 'build/scripts/migrate.js']
+    restart: 'no'
+    healthcheck: { disable: true }
+    depends_on:
+      database: { condition: service_healthy }
+  web:
+    <<: *app
+    depends_on:
+      configure-db: { condition: service_completed_successfully }
+  worker:
+    <<: *app
+    command: ['node', 'build/server/worker-main.js']
+    healthcheck:
+      test: ['CMD', 'node', 'build/server/worker-health.js']
+      interval: 30s
+      timeout: 5s
+    depends_on:
+      configure-db: { condition: service_completed_successfully }
+  configure-db:
+    <<: *app
+    env_file: []
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://school_migrator:${DB_PASSWORD:?set DB_PASSWORD}@database:5432/school
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
+    command: ['node', 'build/scripts/configure-app-role.js']
+    restart: 'no'
+    healthcheck: { disable: true }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+  backup:
+    <<: *app
+    profiles: [backups]
+    env_file: []
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://school_migrator:${DB_PASSWORD:?set DB_PASSWORD}@database:5432/school
+      BACKUP_DIRECTORY: /backups
+      BACKUP_PASSPHRASE: ${BACKUP_PASSPHRASE:?set BACKUP_PASSPHRASE}
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+    command: ['node', 'build/server/backup-main.js']
+    healthcheck: { disable: true }
+    volumes: [encrypted-backups:/backups]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+  proxy:
+    image: caddy:2.11.7-alpine
+    environment:
+      SCHOOL_DOMAIN: ${SCHOOL_DOMAIN:?set SCHOOL_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    ports: ['80:80', '443:443', '443:443/udp']
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+    depends_on: [web]
+    networks: [private]
+volumes:
+  postgres-data:
+  encrypted-backups:
+  caddy-data:
+  caddy-config:
+networks:
+  private:
