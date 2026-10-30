@@ -1,5 +1,7 @@
 # School Management System — current implementation
 
+For Botkeep / Pterodactyl Node.js hosting, see `BOTKEEP_SETUP.md`. Use Node.js 24.x and run `npm ci --include=dev --ignore-scripts` then `npm run build` before `npm start`. The startup launcher also builds missing server output when the compiler is installed; it does not bypass production database or HTTPS requirements.
+
 Android installer source and build instructions are in `android/README.md`. The signed APK is a client for a hosted HTTPS server; it asks for that address at first launch. It contains no school data or owner credentials. Hosting and real-device/live-server acceptance remain pending.
 
 Latest update: Master Panel links are hidden from school navigation. On the normal login page, tap/click the school logo five times within five seconds (or press Alt+Shift+M) to reveal master sign-in. A separate server-verified master session is required; ordinary owner sign-in cannot open platform APIs. The master workspace is separate from school navigation. Permanent school deletion has two independent confirmations, a five-minute session-bound proof and password reauthentication, then deletes all tenant records and revokes every school account. Archive remains a separate recoverable action. See MASTER_PANEL_CHECKLIST.md and SCHOOL_DELETION.md.

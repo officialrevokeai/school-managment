@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "npm run build && node --env-file-if-exists=.env build/server/main.js",
-    "start": "node --env-file-if-exists=.env build/server/main.js",
+    "start": "node --env-file-if-exists=.env scripts/start.mjs",
     "worker": "node --env-file-if-exists=.env build/server/worker-main.js",
     "migrate": "node --env-file-if-exists=.env build/scripts/migrate.js",
     "provision": "node --env-file-if-exists=.env build/scripts/provision.js",
