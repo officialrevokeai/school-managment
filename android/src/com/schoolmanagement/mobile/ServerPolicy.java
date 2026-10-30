@@ -6,6 +6,7 @@ import java.util.Locale;
 
 /** URL policy is deliberately independent of Android so it is JVM-testable. */
 public final class ServerPolicy {
+    public static final String DEFAULT_ORIGIN = "https://school-management-system.bot-keep.xyz";
     private ServerPolicy() {}
     public static String normalize(String input) {
         try {

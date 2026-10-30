@@ -1,5 +1,8 @@
 # Hosting checklist — 30 October 2026
 
+- [x] Performance/admission setup/mobile fixes built and tested; signed live-origin APK prepared (PERFORMANCE_AND_MOBILE.md).
+- [ ] Verify this update on the live host after source sync/rebuild.
+
 - [x] Source-only startup builds missing output and reports missing compiler/runtime clearly.
 - [x] Node 24 build and 13 startup/database/port regressions pass.
 - [x] Managed host binds 0.0.0.0 and uses SERVER_PORT; invalid ports fail clearly.

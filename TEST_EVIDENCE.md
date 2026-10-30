@@ -1,5 +1,7 @@
 # Verification evidence
 
+Latest performance/admission/mobile checkpoint: see PERFORMANCE_AND_MOBILE.md. Full performance regression passed **113 tests**, 0 failures/skips, plus **210 prototype assertions**. Subsequent atomic admission setup, existing admissions, performance and Android export suites passed **16 tests**, 0 failures/skips (61.639 seconds), plus 210 prototype assertions. Android 3.0.1/code 2 passed 35 JVM URL checks, compiler/DEX/ZIP/16KB alignment and v2/v3 signature verification with the unchanged signing certificate. Physical device acceptance remains pending.
+
 2026-10-30 baseline: `node qa/smoke.cjs` PASS: 210 assertions; 140 prototype role routes; nine demo workflows; 196 prototype coverage items. These use fictional local data and prove no authentication, real payment or WhatsApp delivery.
 
 New backend, browser, integration and restore evidence will be appended with exact commands and counts. No live verification has been performed. Nine production release gates remain open.

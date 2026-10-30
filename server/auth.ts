@@ -22,16 +22,23 @@ export type Authed = FastifyRequest & { actor: Actor };
 export function getActor(req: FastifyRequest): Actor { const a=(req as Authed).actor; requireThat(a,'UNAUTHENTICATED','Sign in to continue.',401); return a; }
 const password = z.string().min(12).max(128);
 export function emailConfigured() { return !!(process.env.SMTP_HOST&&process.env.SMTP_FROM&&process.env.PUBLIC_ORIGIN); }
+// One fresh database round trip; authorization is never cached across requests.
+export async function sessionAuthorization(db:DB,tokenHash:string,ip:string,ignoreIp=false){
+ const [result]=await db.query(`SELECT
+ CASE WHEN $4::boolean THEN false ELSE EXISTS(SELECT 1 FROM blocked_ips WHERE ip=$2 AND expires_at>now()) OR EXISTS(SELECT 1 FROM login_guards WHERE key=$3 AND locked_until>now()) END AS blocked,
+ (SELECT row_to_json(identity) FROM (SELECT u.id,u.org_id,u.name,u.role,u.email,s.csrf,s.workspace FROM sessions s JOIN users u ON u.id=s.user_id AND u.org_id=s.org_id JOIN organizations o ON o.id=u.org_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.active AND o.status='active') identity) AS actor`,[tokenHash,normalizeIp(ip),ipKey(ip),ignoreIp]);
+ return result as {blocked:boolean;actor:Actor|null};
+}
 export async function authRoutes(app: FastifyInstance, db: DB) {
   const dummy = await hashPassword(randomBytes(32).toString('hex'));
   app.addHook('preHandler',async req => {
     if (!req.url.startsWith('/api/')) return;
-    if(req.url!=='/api/v1/auth/logout')requireThat(!await ipBlocked(db,req.ip),'IP_BLOCKED','Access from this IP is temporarily blocked.',403);
     const token=req.cookies.school_session;
     if (token) {
-      const [s] = await db.query(`SELECT u.id,u.org_id,u.name,u.role,u.email,s.csrf,s.workspace FROM sessions s JOIN users u ON u.id=s.user_id AND u.org_id=s.org_id JOIN organizations o ON o.id=u.org_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.active AND o.status='active'`,[digest(token)]);
-      if (s) (req as Authed).actor=s as Actor;
-    }
+      const s=await sessionAuthorization(db,digest(token),req.ip,req.url==='/api/v1/auth/logout');
+      requireThat(!s.blocked,'IP_BLOCKED','Access from this IP is temporarily blocked.',403);
+      if(s.actor)(req as Authed).actor=s.actor;
+    }else if(req.url!=='/api/v1/auth/logout')requireThat(!await ipBlocked(db,req.ip),'IP_BLOCKED','Access from this IP is temporarily blocked.',403);
     if (req.method!=='GET'&&req.method!=='HEAD') {
       const expected=process.env.PUBLIC_ORIGIN||'http://localhost:3000';
       requireThat(req.headers.origin===expected,'ORIGIN_REJECTED','Reload this application from its configured origin.',403);

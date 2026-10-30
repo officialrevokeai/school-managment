@@ -1,14 +1,18 @@
-let liveSource=null,liveConnection='Connecting live updates…',pendingLiveRefresh=false,liveRefreshBusy=false;
+let liveSource=null,liveConnection='Connecting live updates…',pendingLiveRefresh=false,liveRefreshBusy=false,liveRefreshTimer=null,liveRefreshGeneration=0;
 function liveLabel(){const el=document.getElementById('live-database-status');if(el)el.textContent=liveConnection;}
+function stopLiveUpdates(){if(liveSource)liveSource.close();liveSource=null;clearTimeout(liveRefreshTimer);liveRefreshTimer=null;pendingLiveRefresh=false;liveRefreshBusy=false;liveRefreshGeneration++;}
+function queueLiveRefresh(){pendingLiveRefresh=true;if(liveRefreshTimer||liveRefreshBusy||!currentUser||dirty||document.hidden||document.querySelector('.live-dialog'))return;liveRefreshTimer=setTimeout(()=>{liveRefreshTimer=null;refreshLiveData();},150);}
 function startLiveUpdates(){
- if(liveSource)liveSource.close();liveConnection='Connecting live updates…';liveSource=new EventSource('/api/v1/events');liveLabel();
- liveSource.addEventListener('ready',e=>{checkBuildUpdate(JSON.parse(e.data).buildVersion);liveConnection='Live database updates connected';liveLabel();});
- liveSource.addEventListener('change',async()=>{liveConnection='Live database updates connected';liveLabel();if(dirty||document.querySelector('.live-dialog')||document.hidden){pendingLiveRefresh=true;return;}await refreshLiveData();});
- liveSource.addEventListener('revoked',()=>endSession('Your session expired or access was revoked. Sign in again.'));
- liveSource.onerror=async()=>{liveConnection='Reconnecting live updates…';liveLabel();try{await api.request('auth/me');}catch(e){if(currentUser&&[401,403].includes(e.status))endSession('Your session ended. Sign in again.');}};
+ stopLiveUpdates();liveConnection='Connecting live updates…';liveSource=new EventSource('/api/v1/events');const source=liveSource,active=()=>source===liveSource&&currentUser;let revision='';liveLabel();
+ liveSource.addEventListener('ready',e=>{if(!active())return;const data=JSON.parse(e.data);checkBuildUpdate(data.buildVersion);liveConnection='Live database updates connected';liveLabel();if(pendingLiveRefresh||revision&&revision!==data.revision){api.invalidate();queueLiveRefresh();}revision=data.revision;});
+ liveSource.addEventListener('change',e=>{if(!active())return;const data=JSON.parse(e.data);if(revision===data.revision)return;revision=data.revision;checkBuildUpdate(data.buildVersion);api.invalidate();liveConnection='Live database updates connected';liveLabel();queueLiveRefresh();});
+ liveSource.addEventListener('revoked',()=>{if(active())endSession('Your session expired or access was revoked. Sign in again.');});
+ liveSource.addEventListener('unavailable',()=>{if(!active())return;api.invalidate();pendingLiveRefresh=true;liveConnection='Live updates temporarily unavailable';liveLabel();});
+ liveSource.onerror=async()=>{if(!active())return;api.invalidate();pendingLiveRefresh=true;liveConnection='Reconnecting live updates…';liveLabel();try{await api.request('auth/me');}catch(e){if(active()&&[401,403].includes(e.status))endSession('Your session ended. Sign in again.');}};
 }
-async function refreshLiveData(){if(liveRefreshBusy||!currentUser)return;liveRefreshBusy=true;try{await loadContext();await loadView();pendingLiveRefresh=false;}catch{liveConnection='Live updates temporarily unavailable';liveLabel();}finally{liveRefreshBusy=false;}}
+async function refreshLiveData(){if(!currentUser)return;if(liveRefreshBusy||dirty||document.hidden||document.querySelector('.live-dialog')){pendingLiveRefresh=true;return;}const generation=liveRefreshGeneration,user=currentUser.id;liveRefreshBusy=true;pendingLiveRefresh=false;try{await loadContext();if(generation!==liveRefreshGeneration||currentUser?.id!==user)return;await loadView({background:true});}catch(e){if(generation!==liveRefreshGeneration)return;if([401,403].includes(e.status))return endSession('Your session ended. Sign in again.');liveConnection='Live updates temporarily unavailable';liveLabel();}finally{if(generation===liveRefreshGeneration){liveRefreshBusy=false;if(pendingLiveRefresh)queueLiveRefresh();}}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&pendingLiveRefresh&&!dirty&&!document.querySelector('.live-dialog'))refreshLiveData();});
+window.addEventListener('storage',e=>{if(e.key==='school-session-epoch'&&currentUser)endSession('The school sign-in changed in another tab. Sign in again.');});
 async function renderAccounts(){
  if(!isOwner())throw new Error('Only the authenticated owner can add accounts.');
  const users=(await api.request('users')).items;

@@ -1,5 +1,5 @@
 let masterLoginMode=false,loginLogoTaps=0,lastLoginLogoTap=0;
-function clearWorkspace(){if(liveSource)liveSource.close();liveSource=null;currentUser=null;context=null;currentData={};api.csrf='';dirty=false;document.getElementById('overlays').replaceChildren();}
+function clearWorkspace(){if(typeof stopLiveUpdates==='function')stopLiveUpdates();else {if(liveSource)liveSource.close();liveSource=null;}currentUser=null;context=null;currentData={};api.csrf='';api.invalidate?.();if(typeof cancelViewLoad==='function')cancelViewLoad();dirty=false;document.getElementById('overlays').replaceChildren();}
 function endSession(message=''){clearWorkspace();masterLoginMode=false;history.replaceState(null,'','#/signin');login();if(message)toast(message);}
 function revealMasterAccess(){
  if(currentUser||document.querySelector('#reset-form'))return;

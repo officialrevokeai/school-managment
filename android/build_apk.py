@@ -11,6 +11,8 @@ import secrets
 import shutil
 import subprocess
 import zipfile
+import xml.etree.ElementTree as ET
+import re
 
 ROOT = Path(__file__).resolve().parent.parent
 ANDROID = ROOT / 'android'
@@ -72,6 +74,8 @@ with zipfile.ZipFile(output) as apk:
     if any('signing-private' in n or n.endswith(('.p12','.env','.jks')) for n in apk.namelist()): raise SystemExit('Private build data cannot be packaged')
 digest = hashlib.sha256(output.read_bytes()).hexdigest()
 output.with_suffix('.apk.sha256').write_text(digest+'  '+output.name+'\n',encoding='ascii')
-(work / 'latest-build.json').write_text(json.dumps({'apk':str(output),'sha256':digest,'bytes':output.stat().st_size,'sdk':36,'minSdk':26,'version':'3.0.0','signatureVerified':True,'liveServerConfigured':False},indent=2),encoding='utf-8')
+manifest=ET.parse(ANDROID / 'AndroidManifest.xml').getroot()
+origin=re.search(r'DEFAULT_ORIGIN\s*=\s*"([^"]+)"', (ANDROID / 'src/com/schoolmanagement/mobile/ServerPolicy.java').read_text()).group(1)
+(work / 'latest-build.json').write_text(json.dumps({'apk':str(output),'sha256':digest,'bytes':output.stat().st_size,'sdk':36,'minSdk':26,'version':manifest.attrib['{http://schemas.android.com/apk/res/android}versionName'],'versionCode':int(manifest.attrib['{http://schemas.android.com/apk/res/android}versionCode']),'signatureVerified':True,'liveServerConfigured':True,'defaultOrigin':origin},indent=2),encoding='utf-8')
 print('APK built, aligned, signed and verified:', output)
 print('Size:', output.stat().st_size, 'bytes. Keep runtime/android-signing private and backed up for future updates.')

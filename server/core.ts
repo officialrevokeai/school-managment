@@ -50,7 +50,9 @@ export async function classAccess(db: DB, a: Actor, classId: string, subjectId?:
   return c;
 }
 export async function visibleStudents(db: DB, a: Actor) {
-  return db.query(`SELECT DISTINCT s.*,e.class_id,c.name AS class_name FROM students s
+  return db.query(visibleStudentsSql, [a.org_id,a.id,a.role]);
+}
+export const visibleStudentsSql = `SELECT DISTINCT s.*,e.class_id,c.name AS class_name FROM students s
     LEFT JOIN enrollments e ON e.org_id=s.org_id AND e.student_id=s.id AND e.active
     LEFT JOIN classes c ON c.org_id=e.org_id AND c.id=e.class_id
     WHERE s.org_id=$1 AND s.active AND (
@@ -58,8 +60,7 @@ export async function visibleStudents(db: DB, a: Actor) {
     ($3 IN ('principal','office') AND EXISTS(SELECT 1 FROM branch_assignments b WHERE b.org_id=s.org_id AND b.branch_id=s.branch_id AND b.user_id=$2)) OR
     ($3='teacher' AND EXISTS(SELECT 1 FROM branch_assignments b JOIN teacher_assignments t ON t.org_id=b.org_id AND t.user_id=b.user_id WHERE b.org_id=s.org_id AND b.branch_id=s.branch_id AND b.user_id=$2 AND t.class_id=e.class_id)) OR
     ($3='parent' AND EXISTS(SELECT 1 FROM guardian_links g WHERE g.org_id=s.org_id AND g.user_id=$2 AND g.student_id=s.id)) OR
-    ($3='student' AND s.user_id=$2)) ORDER BY s.name`, [a.org_id,a.id,a.role]);
-}
+    ($3='student' AND s.user_id=$2)) ORDER BY s.name,s.id,e.class_id`;
 export async function studentAccess(db: DB, a: Actor, studentId: string) {
   const s = (await visibleStudents(db,a)).find(s => s.id === studentId);
   requireThat(s);

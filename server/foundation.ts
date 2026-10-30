@@ -2,22 +2,26 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { DB, Row } from './db.js';
 import { getActor, hashPassword, emailConfigured } from './auth.js';
-import { id, text, identifier, roles, day, digest, allow, audit, requireThat, branchAccess, classAccess, studentAccess, visibleStudents, fileAccess, enqueue, type Actor } from './core.js';
+import { id, text, identifier, roles, day, digest, allow, audit, requireThat, branchAccess, classAccess, studentAccess, visibleStudents, visibleStudentsSql, fileAccess, enqueue, type Actor } from './core.js';
 import { randomBytes } from 'node:crypto';
-import { isPlatformAdmin } from './platform.js';
 
 const paramId=(req:any)=>identifier.parse(req.params.id);
 export async function foundationRoutes(app:FastifyInstance, db:DB) {
   app.get('/api/v1/context',async req=>{
-    const a=getActor(req),students=await visibleStudents(db,a);
-    const [org]=await db.query('SELECT id,name,slug,timezone,settings FROM organizations WHERE id=$1',[a.org_id]);
-    const branches=await db.query(`SELECT b.* FROM branches b WHERE b.org_id=$1 AND b.active AND ($2='owner' OR EXISTS(SELECT 1 FROM branch_assignments x WHERE x.org_id=b.org_id AND x.branch_id=b.id AND x.user_id=$3) OR b.id=ANY($4::text[])) ORDER BY b.name`,[a.org_id,a.role,a.id,students.map(s=>s.branch_id)]);
-    const classes=await db.query(`SELECT c.* FROM classes c WHERE c.org_id=$1 AND (
-      $2='owner' OR ($2 IN ('principal','office') AND c.branch_id=ANY($3::text[])) OR
-      ($2='teacher' AND c.branch_id=ANY($3::text[]) AND EXISTS(SELECT 1 FROM teacher_assignments t WHERE t.org_id=c.org_id AND t.class_id=c.id AND t.user_id=$4)) OR c.id=ANY($5::text[])) ORDER BY c.name`,[a.org_id,a.role,branches.map(b=>b.id),a.id,students.map(s=>s.class_id).filter(Boolean)]);
-    const years=await db.query('SELECT * FROM academic_years WHERE org_id=$1 ORDER BY starts DESC',[a.org_id]);
-    const subjects=await db.query('SELECT * FROM subjects WHERE org_id=$1 ORDER BY name',[a.org_id]);
-    return {buildVersion:app.buildVersion,organization:org,branches,classes,years,subjects,students,environment:process.env.QA_PREVIEW==='true'?'DISPOSABLE QA — synthetic data':process.env.NODE_ENV==='production'?'production':'development',user:{id:a.id,name:a.name,role:a.role,email:a.email,workspace:a.workspace,platformAdmin:a.workspace==='platform'&&await isPlatformAdmin(db,a)}};
+    const a=getActor(req);
+    const [data]=await db.query(`WITH visible AS (${visibleStudentsSql}), allowed_branches AS (
+      SELECT b.* FROM branches b WHERE b.org_id=$1 AND b.active AND ($3='owner' OR EXISTS(SELECT 1 FROM branch_assignments x WHERE x.org_id=b.org_id AND x.branch_id=b.id AND x.user_id=$2) OR b.id IN(SELECT branch_id FROM visible))
+    ), allowed_classes AS (
+      SELECT c.* FROM classes c WHERE c.org_id=$1 AND ($3='owner' OR ($3 IN ('principal','office') AND c.branch_id IN(SELECT id FROM allowed_branches)) OR ($3='teacher' AND c.branch_id IN(SELECT id FROM allowed_branches) AND EXISTS(SELECT 1 FROM teacher_assignments t WHERE t.org_id=c.org_id AND t.class_id=c.id AND t.user_id=$2)) OR c.id IN(SELECT class_id FROM visible))
+    ) SELECT
+      (SELECT row_to_json(o) FROM (SELECT id,name,slug,timezone,settings FROM organizations WHERE id=$1) o) AS organization,
+      COALESCE((SELECT jsonb_agg(to_jsonb(b) ORDER BY b.name,b.id) FROM allowed_branches b),'[]') AS branches,
+      COALESCE((SELECT jsonb_agg(to_jsonb(c) ORDER BY c.name,c.id) FROM allowed_classes c),'[]') AS classes,
+      COALESCE((SELECT jsonb_agg(to_jsonb(y) ORDER BY y.starts DESC,y.id) FROM academic_years y WHERE org_id=$1),'[]') AS years,
+      COALESCE((SELECT jsonb_agg(to_jsonb(s) ORDER BY s.name,s.id) FROM subjects s WHERE org_id=$1),'[]') AS subjects,
+      COALESCE((SELECT jsonb_agg(to_jsonb(v) ORDER BY v.name,v.id,v.class_id) FROM visible v),'[]') AS students,
+      EXISTS(SELECT 1 FROM platform_admins WHERE user_id=$2) AS master`,[a.org_id,a.id,a.role]);
+    return {buildVersion:app.buildVersion,...data,master:undefined,environment:process.env.QA_PREVIEW==='true'?'DISPOSABLE QA — synthetic data':process.env.NODE_ENV==='production'?'production':'development',user:{id:a.id,name:a.name,role:a.role,email:a.email,workspace:a.workspace,platformAdmin:a.workspace==='platform'&&data.master}};
   });
   app.get('/api/v1/students',async req=>({items:await visibleStudents(db,getActor(req))}));
   app.get('/api/v1/students/:id',async req=>studentAccess(db,getActor(req),paramId(req)));
@@ -78,6 +82,49 @@ export async function foundationRoutes(app:FastifyInstance, db:DB) {
   app.post('/api/v1/academic-years',async req=>{
     const a=getActor(req);allow(a,['owner']);const b=z.object({name:text,starts:day,ends:day}).strict().refine(x=>x.ends>=x.starts).parse(req.body),year=id();
     await db.transaction(async tx=>{await tx.query('INSERT INTO academic_years(id,org_id,name,starts,ends) VALUES($1,$2,$3,$4,$5)',[year,a.org_id,b.name,b.starts,b.ends]);await audit(tx,a,'create','academic_year',year,b);});return {id:year,...b};
+  });
+  // A first school must be able to reach admissions without empty campus/year selectors.
+  app.post('/api/v1/academic-setup',async req=>{
+    const a=getActor(req);allow(a,['owner']);
+    const b=z.object({
+      campus:z.union([z.object({branchId:identifier}).strict(),z.object({name:text,schoolId:identifier}).strict(),z.object({name:text,schoolName:text}).strict()]),
+      year:z.union([z.object({yearId:identifier}).strict(),z.object({name:text,starts:day,ends:day}).strict().refine(y=>y.ends>=y.starts)]),
+      classes:z.array(text).min(1).max(60)
+    }).strict().parse(req.body);
+    requireThat(new Set(b.classes.map(n=>n.toLowerCase())).size===b.classes.length,'DUPLICATE_CLASS','Enter each class and section only once.',400);
+    return db.transaction(async tx=>{
+      // Serializes retries and concurrent setup requests for this organization only.
+      await tx.query('SELECT id FROM organizations WHERE id=$1 FOR UPDATE',[a.org_id]);
+      let branchId:string,yearId:string;
+      if('branchId' in b.campus){branchId=b.campus.branchId;await branchAccess(tx,a,branchId);}
+      else{
+        let schoolId:string;
+        if('schoolId' in b.campus){schoolId=b.campus.schoolId;requireThat((await tx.query('SELECT 1 FROM schools WHERE org_id=$1 AND id=$2 AND active',[a.org_id,schoolId])).length);}
+        else{
+          const [school]=await tx.query('SELECT id FROM schools WHERE org_id=$1 AND lower(name)=lower($2) AND active ORDER BY id LIMIT 1',[a.org_id,b.campus.schoolName]);
+          schoolId=school?.id||id();
+          if(!school){await tx.query('INSERT INTO schools(id,org_id,name) VALUES($1,$2,$3)',[schoolId,a.org_id,b.campus.schoolName]);await audit(tx,a,'create','school',schoolId,{name:b.campus.schoolName});}
+        }
+        const [branch]=await tx.query('SELECT id FROM branches WHERE org_id=$1 AND school_id=$2 AND lower(name)=lower($3) AND active ORDER BY id LIMIT 1',[a.org_id,schoolId,b.campus.name]);
+        branchId=branch?.id||id();
+        if(!branch){await tx.query('INSERT INTO branches(id,org_id,school_id,name) VALUES($1,$2,$3,$4)',[branchId,a.org_id,schoolId,b.campus.name]);await audit(tx,a,'create','branch',branchId,{schoolId,name:b.campus.name},branchId);}
+      }
+      if('yearId' in b.year){yearId=b.year.yearId;requireThat((await tx.query('SELECT 1 FROM academic_years WHERE org_id=$1 AND id=$2',[a.org_id,yearId])).length);}
+      else{
+        const [year]=await tx.query('SELECT id,starts::text,ends::text FROM academic_years WHERE org_id=$1 AND name=$2',[a.org_id,b.year.name]);
+        requireThat(!year||(year.starts===b.year.starts&&year.ends===b.year.ends),'YEAR_CONFLICT','That academic year already has different dates. Choose the existing year in Academic setup.',409);
+        yearId=year?.id||id();
+        if(!year){await tx.query('INSERT INTO academic_years(id,org_id,name,starts,ends) VALUES($1,$2,$3,$4,$5)',[yearId,a.org_id,b.year.name,b.year.starts,b.year.ends]);await audit(tx,a,'create','academic_year',yearId,b.year);}
+      }
+      const classes=[];
+      for(const name of b.classes){
+        const [existing]=await tx.query('SELECT id,name FROM classes WHERE org_id=$1 AND branch_id=$2 AND year_id=$3 AND lower(name)=lower($4)',[a.org_id,branchId,yearId,name]);
+        const cls=existing||{id:id(),name};
+        if(!existing){await tx.query('INSERT INTO classes(id,org_id,branch_id,year_id,name) VALUES($1,$2,$3,$4,$5)',[cls.id,a.org_id,branchId,yearId,name]);await audit(tx,a,'create','class',cls.id,{name,yearId},branchId);}
+        classes.push(cls);
+      }
+      return {branchId,yearId,classes};
+    });
   });
   app.post('/api/v1/classes',async req=>{
     const a=getActor(req);allow(a,['owner']);const b=z.object({name:text,branchId:identifier,yearId:identifier}).strict().parse(req.body),cid=id();

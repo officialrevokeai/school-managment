@@ -11,11 +11,17 @@ export async function reportsRoutes(app:FastifyInstance,db:DB){
  };
  app.get('/api/v1/dashboard',async req=>{
   const {a,students,branchId}=await filterStudents(req),ids=students.map(s=>s.id),classes=[...new Set(students.map(s=>s.class_id).filter(Boolean))];
-  const [homework]=await db.query("SELECT count(*)::int AS count FROM homework h WHERE h.org_id=$1 AND h.status='published' AND h.class_id=ANY($2::text[]) AND $3<>'office' AND ($3<>'teacher' OR EXISTS(SELECT 1 FROM teacher_assignments t WHERE t.org_id=h.org_id AND t.user_id=$4 AND t.class_id=h.class_id AND t.subject_id=h.subject_id))",[a.org_id,classes,a.role,a.id]);
-  let approvals=0;if(['owner','principal'].includes(a.role)){const rows=await db.query("SELECT branch_id FROM admissions WHERE org_id=$1 AND status='submitted' AND created_by<>$2 UNION ALL SELECT branch_id FROM assessments WHERE org_id=$1 AND status='submitted' AND created_by<>$2 UNION ALL SELECT branch_id FROM leave_requests WHERE org_id=$1 AND status='submitted' AND created_by<>$2 UNION ALL SELECT branch_id FROM school_records WHERE org_id=$1 AND status='submitted' AND created_by<>$2 AND ($3='owner' OR kind NOT IN ('expense','payroll','reconciliation'))",[a.org_id,a.id,a.role]);for(const r of rows){if(branchId&&r.branch_id!==branchId)continue;try{await branchAccess(db,a,r.branch_id);approvals++;}catch{}}}
-  let outstanding:number|null=null;if(['owner','office','parent','student'].includes(a.role)){const [balance]=await db.query('SELECT COALESCE(sum(total_minor-paid_minor),0)::bigint AS balance FROM invoices WHERE org_id=$1 AND student_id=ANY($2::text[])',[a.org_id,ids]);outstanding=Number(balance.balance);}
-  const [att]=await db.query("SELECT count(*)::int AS total,count(*) FILTER(WHERE e.status IN ('present','late'))::int AS present FROM attendance_entries e JOIN attendance_sessions s ON s.org_id=e.org_id AND s.id=e.session_id WHERE e.org_id=$1 AND e.student_id=ANY($2::text[]) AND s.status='submitted'",[a.org_id,ids]);
-  return {students:students.length,homework:homework.count,approvals,outstandingMinor:outstanding,attendance:att.total?Math.round(att.present/att.total*1000)/10:null};
+  const [totals]=await db.query(`WITH pending AS (
+    SELECT branch_id FROM admissions WHERE org_id=$1 AND status='submitted' AND created_by<>$5
+    UNION ALL SELECT branch_id FROM assessments WHERE org_id=$1 AND status='submitted' AND created_by<>$5
+    UNION ALL SELECT branch_id FROM leave_requests WHERE org_id=$1 AND status='submitted' AND created_by<>$5
+    UNION ALL SELECT branch_id FROM school_records WHERE org_id=$1 AND status='submitted' AND created_by<>$5 AND ($4='owner' OR kind NOT IN ('expense','payroll','reconciliation'))
+  ) SELECT
+   (SELECT count(*)::int FROM homework h WHERE h.org_id=$1 AND h.status='published' AND h.class_id=ANY($3::text[]) AND $4<>'office' AND ($4<>'teacher' OR EXISTS(SELECT 1 FROM teacher_assignments t WHERE t.org_id=h.org_id AND t.user_id=$5 AND t.class_id=h.class_id AND t.subject_id=h.subject_id))) AS homework,
+   (SELECT count(*)::int FROM pending p JOIN branches b ON b.org_id=$1 AND b.id=p.branch_id AND b.active WHERE $4 IN ('owner','principal') AND ($6::text IS NULL OR p.branch_id=$6) AND ($4='owner' OR EXISTS(SELECT 1 FROM branch_assignments x WHERE x.org_id=$1 AND x.branch_id=b.id AND x.user_id=$5))) AS approvals,
+   CASE WHEN $4 IN ('owner','office','parent','student') THEN (SELECT COALESCE(sum(total_minor-paid_minor),0)::bigint FROM invoices WHERE org_id=$1 AND student_id=ANY($2::text[])) ELSE NULL END AS outstanding,
+   (SELECT jsonb_build_object('total',count(*),'present',count(*) FILTER(WHERE e.status IN ('present','late'))) FROM attendance_entries e JOIN attendance_sessions s ON s.org_id=e.org_id AND s.id=e.session_id WHERE e.org_id=$1 AND e.student_id=ANY($2::text[]) AND s.status='submitted') AS attendance`,[a.org_id,ids,classes,a.role,a.id,branchId||null]);
+  return {students:students.length,homework:totals.homework,approvals:totals.approvals,outstandingMinor:totals.outstanding===null?null:Number(totals.outstanding),attendance:totals.attendance.total?Math.round(totals.attendance.present/totals.attendance.total*1000)/10:null};
  });
  app.get('/api/v1/reports',async req=>{
   const {a,students}=await filterStudents(req);allow(a,['owner','principal','office','teacher']);const ids=students.map(s=>s.id);

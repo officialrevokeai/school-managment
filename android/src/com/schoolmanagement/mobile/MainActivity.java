@@ -71,7 +71,7 @@ public final class MainActivity extends Activity {
         if(Build.VERSION.SDK_INT>=29)root.setForceDarkAllowed(false);
         setContentView(root);root.requestApplyInsets();
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::back);
-        String saved=preferences().getString("server","");
+        String saved=preferences().getString("server",ServerPolicy.DEFAULT_ORIGIN);
         try { origin=ServerPolicy.normalize(saved);openSchool(); } catch(IllegalArgumentException e){showSetup();}
     }
     private SharedPreferences preferences(){return getSharedPreferences("school_connection",MODE_PRIVATE);}
