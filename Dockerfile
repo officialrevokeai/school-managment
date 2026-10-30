@@ -23,6 +23,8 @@ COPY --from=build /app/build/server ./build/server
 COPY --from=build /app/build/scripts/migrate.js /app/build/scripts/provision.js /app/build/scripts/backup.js /app/build/scripts/restore.js /app/build/scripts/configure-app-role.js ./build/scripts/
 COPY --from=build /app/build/scripts/platform-admin.js /app/build/scripts/supabase-prepare.js /app/build/scripts/supabase-transfer.js ./build/scripts/
 COPY migrations ./migrations
+COPY deploy/certs ./deploy/certs
+COPY deploy/supabase-harden.sql ./deploy/supabase-harden.sql
 COPY web ./web
 RUN mkdir -p /backups && chown node:node /backups
 USER node

@@ -44,6 +44,16 @@ Replace placeholders; never commit the actual database connection. `PORT` must b
 
 ## Application is not responding
 
+### Exit 137 / Out of memory: true
+
+This combination confirms the host killed the process for exceeding its memory allocation. The reported Botkeep allocation is 512 MB and `DATABASE_URL` is unset. In that configuration the app starts its development embedded PostgreSQL engine inside the same process. An isolated startup on the Windows development machine measured approximately 1,106 MiB peak RSS (606 MiB after readiness); this is diagnostic evidence, not a Linux hosting capacity guarantee.
+
+Use external PostgreSQL for production. Put the private connection in the host's Environment as `DATABASE_URL`, set `NODE_ENV=production`, and complete the documented schema migrations / restricted-role setup / original-data transfer before starting. For the selected Supabase project, follow SUPABASE_SETUP.md; the Session pooler is suitable for persistent backends on IPv4 networks. Project MCP access or a publishable API key does not supply the app's PostgreSQL password.
+
+PostgreSQL mode now lazily avoids loading PGlite at all. Startup logs identify the selected backend without printing its connection string. `Database backend: local PGlite (development/test only)` means the external database connection is still missing. External database mode has not been live-tested on the 512 MB Botkeep allocation and requires load acceptance; do not claim it is verified merely because the import is lighter. Raising the JavaScript heap limit does not raise the container's RAM allocation. The esbuild install-script warning is separate from the host's explicit out-of-memory kill.
+
+Install/build once after a source update, then keep startup as `npm start` to avoid repeating another dependency install/build inside the host's own install/start cycle. Provider workers still require their separate service.
+
 The reported `ENOENT ... mkdir '/home/container/runtime/local-postgres'` crash occurs because a source-only checkout has no ignored `runtime/` parent directory. Development/test filesystem databases now create their missing parents automatically and retain stored records across restart. This does not enable local PGlite in production: PostgreSQL is still required there. If this local path appears in hosted startup logs, no `DATABASE_URL` is in use and the process is not running in production mode. It is a separate database from the one on your computer.
 
 After importing a newer source revision, run `npm run build` before restarting; an existing `build/` directory may contain the previous compiled server. Keep the startup command as `npm start`.

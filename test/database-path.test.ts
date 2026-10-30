@@ -4,6 +4,26 @@ import { mkdtemp, rm, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { openDatabase } from '../server/db.js';
+import { spawnSync } from 'node:child_process';
+
+test('PostgreSQL mode never imports the embedded database, including missing production configuration',()=>{
+  const result=spawnSync(process.execPath,['--input-type=module','-e',`
+    import assert from 'node:assert/strict';
+    import { registerHooks } from 'node:module';
+    registerHooks({resolve(name,context,next){
+      if(name==='@electric-sql/pglite')throw new Error('Embedded database must not load');
+      return next(name,context);
+    }});
+    const {openDatabase}=await import('./build/server/db.js');
+    process.env.NODE_ENV='production';process.env.DB_SCHEMA='public';
+    const db=await openDatabase('postgresql://unused:unused@127.0.0.1:1/unused');
+    await db.close();
+    await assert.rejects(()=>openDatabase(''),/DATABASE_URL is required in production/);
+    console.log('POSTGRES_WITHOUT_EMBEDDED_ENGINE');
+  `],{encoding:'utf8',timeout:10000});
+  assert.equal(result.status,0,result.stderr);
+  assert.match(result.stdout,/POSTGRES_WITHOUT_EMBEDDED_ENGINE/);
+});
 
 test('a fresh checkout creates missing database parents and retains records across reopen', async()=>{
   const root=await mkdtemp(join(tmpdir(),'school database '));

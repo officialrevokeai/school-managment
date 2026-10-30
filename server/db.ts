@@ -1,4 +1,3 @@
-import { PGlite } from '@electric-sql/pglite';
 import pg from 'pg';
 import { readFile, readdir, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -39,6 +38,8 @@ export async function openDatabase(url = process.env.DATABASE_URL, options:{snap
     const path=dataDir.startsWith('file://')?fileURLToPath(dataDir):dataDir;
     await mkdir(dirname(resolve(path)),{recursive:true});
   }
+  // Production PostgreSQL connections must not load the embedded WASM engine.
+  const { PGlite } = await import('@electric-sql/pglite');
   const pglite = new PGlite({dataDir,...(options.snapshot?{loadDataDir:options.snapshot}:{})});
   const wrap = (client: any): DB => ({
     query: async (s, p = []) => (await client.query(s, p)).rows,

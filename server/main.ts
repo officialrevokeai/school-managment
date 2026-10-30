@@ -6,6 +6,7 @@ const listen=resolveListenConfig();
 if(process.env.NODE_ENV==='production'&&!process.env.PUBLIC_ORIGIN?.startsWith('https://'))throw new Error('PUBLIC_ORIGIN must be HTTPS in production.');
 if(!process.env.DATABASE_URL&&!process.env.PGLITE_PATH)process.env.PGLITE_PATH='./runtime/local-postgres';
 if(process.env.NODE_ENV!=='production'&&!process.env.PUBLIC_ORIGIN)process.env.PUBLIC_ORIGIN='http://127.0.0.1:'+listen.port;
+console.log(`Database backend: ${process.env.DATABASE_URL?'PostgreSQL':'local PGlite (development/test only)'}`);
 const db=await openDatabase();if(process.env.NODE_ENV!=='production')await migrate(db);const app=await createApp(db);
 await app.listen(listen);
 console.log(`School Management API listening: http://${listen.host.includes(':')?'['+listen.host+']':listen.host}:${listen.port}`);
