@@ -40,7 +40,17 @@ DATABASE_URL=YOUR_PRIVATE_POSTGRESQL_CONNECTION_STRING
 WORKER_IN_API=false
 ```
 
-Replace placeholders; never commit the actual database connection. `PORT` must be numeric and `PUBLIC_ORIGIN` must be the browser's HTTPS origin without a path. The API listens on `HOST` and `PORT`; it does not automatically substitute the panel's `SERVER_PORT`. Only configure `TRUST_PROXY` after confirming the actual trusted proxy addresses; do not trust all clients.
+Replace placeholders; never commit the actual database connection. `PORT` must be numeric and `PUBLIC_ORIGIN` must be the browser's HTTPS origin without a path. When the panel supplies `SERVER_PORT`, the API automatically uses that allocated port and binds `0.0.0.0`, overriding stale local `PORT` / `HOST` values. On other hosts it uses `PORT`; production defaults to `0.0.0.0`, while local development stays on loopback. Invalid ports fail clearly. Only configure `TRUST_PROXY` after confirming the actual trusted proxy addresses; do not trust all clients.
+
+## Application is not responding
+
+The reported `ENOENT ... mkdir '/home/container/runtime/local-postgres'` crash occurs because a source-only checkout has no ignored `runtime/` parent directory. Development/test filesystem databases now create their missing parents automatically and retain stored records across restart. This does not enable local PGlite in production: PostgreSQL is still required there. If this local path appears in hosted startup logs, no `DATABASE_URL` is in use and the process is not running in production mode. It is a separate database from the one on your computer.
+
+After importing a newer source revision, run `npm run build` before restarting; an existing `build/` directory may contain the previous compiled server. Keep the startup command as `npm start`.
+
+In Network, note the assigned application port. In Domains, route your app's HTTPS address to that same port. The new startup log prints the actual bind address, for example `School Management API listening: http://0.0.0.0:27135`. That port must match the panel allocation and domain target. If the host does not export `SERVER_PORT`, set `HOST=0.0.0.0` and `PORT` to the numeric allocation manually. Set `PUBLIC_ORIGIN` to the real public HTTPS origin for login/CSRF checks; a localhost origin is not correct for a hosted browser session.
+
+Check the public HTTPS URL's `/health/live` endpoint. If it is unreachable although the console shows the expected listening address, inspect domain/proxy routing and the host's port allocation. If the listening line never appears, read the preceding startup error (including database, migration or HTTPS-origin errors). A panel's running status alone does not prove the HTTP app is reachable. Never disable login/CSRF or enable the development database to hide a production configuration failure.
 
 Production refuses to start without PostgreSQL and an HTTPS origin. It does not fall back to the local development database. New remote databases do not contain the owner account or school records from your computer. Use the documented secure provisioning or transfer process; do not seed default credentials. Database migration credentials must stay separate from the restricted runtime identity. Follow DEPLOYMENT.md / SUPABASE_SETUP.md for migrations, role permissions, owner provisioning and backup setup before exposing the app.
 

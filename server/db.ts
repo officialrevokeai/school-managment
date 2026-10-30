@@ -1,8 +1,9 @@
 import { PGlite } from '@electric-sql/pglite';
 import pg from 'pg';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export type Row = Record<string, any>;
 export interface DB {
@@ -32,7 +33,13 @@ export async function openDatabase(url = process.env.DATABASE_URL, options:{snap
     return wrap(pool);
   }
   if (process.env.NODE_ENV === 'production') throw new Error('DATABASE_URL is required in production; PGlite is development/test only.');
-  const pglite = new PGlite({dataDir:process.env.PGLITE_PATH || 'memory://',...(options.snapshot?{loadDataDir:options.snapshot}:{})});
+  const dataDir=process.env.PGLITE_PATH || 'memory://';
+  // PGlite creates its own directory, but requires its filesystem parent to exist.
+  if(dataDir.startsWith('file://')||!dataDir.includes('://')){
+    const path=dataDir.startsWith('file://')?fileURLToPath(dataDir):dataDir;
+    await mkdir(dirname(resolve(path)),{recursive:true});
+  }
+  const pglite = new PGlite({dataDir,...(options.snapshot?{loadDataDir:options.snapshot}:{})});
   const wrap = (client: any): DB => ({
     query: async (s, p = []) => (await client.query(s, p)).rows,
     exec: async s => { await client.exec(s); },

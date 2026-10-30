@@ -1,11 +1,14 @@
 import { openDatabase, migrate } from './db.js';
 import { createApp } from './app.js';
 import { workerTick } from './worker.js';
+import { resolveListenConfig } from './listen-config.js';
+const listen=resolveListenConfig();
 if(process.env.NODE_ENV==='production'&&!process.env.PUBLIC_ORIGIN?.startsWith('https://'))throw new Error('PUBLIC_ORIGIN must be HTTPS in production.');
 if(!process.env.DATABASE_URL&&!process.env.PGLITE_PATH)process.env.PGLITE_PATH='./runtime/local-postgres';
-if(process.env.NODE_ENV!=='production'&&!process.env.PUBLIC_ORIGIN)process.env.PUBLIC_ORIGIN='http://127.0.0.1:'+(process.env.PORT||3000);
+if(process.env.NODE_ENV!=='production'&&!process.env.PUBLIC_ORIGIN)process.env.PUBLIC_ORIGIN='http://127.0.0.1:'+listen.port;
 const db=await openDatabase();if(process.env.NODE_ENV!=='production')await migrate(db);const app=await createApp(db);
-await app.listen({host:process.env.HOST||'127.0.0.1',port:Number(process.env.PORT||3000)});
-console.log(`School Management API: ${process.env.PUBLIC_ORIGIN||'http://localhost:3000'}`);
+await app.listen(listen);
+console.log(`School Management API listening: http://${listen.host.includes(':')?'['+listen.host+']':listen.host}:${listen.port}`);
+console.log(`Public application origin: ${process.env.PUBLIC_ORIGIN}`);
 let busy=false;const timer=process.env.NODE_ENV!=='production'&&process.env.WORKER_IN_API!=='false'?setInterval(async()=>{if(busy)return;busy=true;try{await workerTick(db);}catch{process.stderr.write('Worker tick failed.\n');}finally{busy=false;}},1000):null;
 for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{if(timer)clearInterval(timer);while(busy)await new Promise(r=>setTimeout(r,50));await app.close();await db.close();process.exit(0);});
