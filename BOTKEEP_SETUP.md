@@ -72,6 +72,6 @@ npm run worker
 
 Production deliberately does not run this worker inside the API. A host that permits only one process needs a separate worker service. Real WhatsApp delivery remains blocked until provider credentials, approval and an opted-in test recipient are configured and authentic callbacks are verified.
 
-Check `/health/live` and `/health/ready` after startup. Building successfully fixes the missing-file crash; it does not prove database configuration, HTTPS routing, worker operation or the nine live release workflows. No remote Botkeep deployment has been verified from this workspace.
+Hosted smoke verification on 30 October 2026: commit `8038f29` runs on Node 24 at https://school-management-system.bot-keep.xyz using encrypted Environment values, private Supabase PostgreSQL and startup `npm run build && npm start`. The host installs dependencies itself. Homepage, `/health/live` and `/health/ready` return 200; anonymous `/api/v1/users` returns 401, and configuration-file URLs return 404. Original owner login, dashboard and Account Add were verified with live updates connected. Observed runtime memory was approximately 108 MB / 512 MB. Separate worker, additional-role/device/load and external-provider acceptance remain open; the current Free plan has one allocated workload slot. No full release-readiness claim is made.
 
 Official references: [Botkeep Node.js guide](https://botkeep.cloud/docs/nodejs), [GitHub imports](https://botkeep.cloud/docs/github), [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).

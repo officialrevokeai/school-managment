@@ -12,4 +12,4 @@
 |8 Sender → reminder → evidence|Mock scheduling, opt-out/paid suppression, retries, quiet hours/restart|Authorized receipt, authentic callback/reply and browser-closed real send|
 |9 Leave → decision → requester|Conflict validation, comments and notification tests|Full staging browser acceptance|
 
-No production URL, production-ready claim or final release ZIP exists. Feature gaps remain in FEATURE_COVERAGE.csv/BLOCKERS.md. Local tests prove only their stated assertions.
+The HTTPS app is running at https://school-management-system.bot-keep.xyz, with public health, original owner login, dashboard and Account Add smoke checks passed. All nine full release gates above remain open; no complete production-ready claim is made. Feature gaps remain in FEATURE_COVERAGE.csv/BLOCKERS.md. Each test proves only its stated assertions.
